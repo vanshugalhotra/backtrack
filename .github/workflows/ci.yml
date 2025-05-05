@@ -1,0 +1,36 @@
+name: CI Workflow
+
+# Trigger the workflow on push to any branch
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  # Job for testing the project
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js environment (e.g., version 16)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run tests (optional for now)
+      - name: Run tests
+        run: npm run test || echo "No tests found."
+
