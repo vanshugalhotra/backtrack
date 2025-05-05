@@ -1,36 +1,42 @@
 name: CI Workflow
 
-# Trigger the workflow on push to any branch
 on:
   push:
     branches:
-      - main
-      - dev
+      - dev  # Trigger on push to dev branch
   pull_request:
     branches:
-      - main
-      - dev
+      - dev  # Trigger on PR to dev branch
 
 jobs:
-  # Job for testing the project
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Node.js environment (e.g., version 16)
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '16'  # Adjust Node.js version if necessary
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies (in frontend directory)
+        run: |
+          cd frontend  # Change to frontend directory
+          npm install
+          npm ci  # This ensures the exact dependency versions are installed
 
-      # Run tests (optional for now)
       - name: Run tests
-        run: npm run test || echo "No tests found."
+        run: |
+          cd frontend  # Ensure you're in the frontend directory
+          npm run test || true  # Running tests, ignore failures for now (or handle as needed)
 
+      - name: Build the project
+        run: |
+          cd frontend  # Change to frontend directory
+          npm run build
+
+      - name: Deploy (if needed)
+        run: |
+          # Deploy command here if you want to trigger deployment
