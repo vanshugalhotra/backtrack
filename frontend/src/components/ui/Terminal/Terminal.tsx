@@ -10,12 +10,31 @@ const Terminal: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const handleExecute = async () => {
+    if (!input.trim()) {
+      setHistory((prev) => [...prev, "Error: Command cannot be empty!"]);
+      return;
+    }
 
-  const handleExecute = () => {
-    if (!input.trim()) return;
-    const newOutput = [`> ${input}`, `Output for: ${input}`];
-    setHistory([...history, ...newOutput]);
-    setInput("");
+    try {
+      // Simulate a backend request for now
+      const response = { ok: false, message: "Backend not ready" }; // Mocked response
+
+      if (!response.ok) {
+        throw new Error(response.message);
+      }
+
+      // Simulate backend success
+      const result = { output: "Command executed successfully" };
+      setHistory((prev) => [...prev, `> ${input}`, result.output]);
+    } catch (error) {
+      setHistory((prev) => [
+        ...prev,
+        `> ${input}`, error instanceof Error ? error.message : "An unknown error occurred",]
+      );
+    } finally {
+      setInput("");
+    }
   };
 
   useStarfield(canvasRef);
