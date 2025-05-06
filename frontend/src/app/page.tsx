@@ -1,4 +1,12 @@
+"use client";
+
 import Sidebar from "@/components/ui/Sidebar/Sidebar";
+// in app/page.tsx or wherever it's used
+import dynamic from 'next/dynamic';
+
+const Terminal = dynamic(() => import('@/components/ui/Terminal/Terminal'), {
+  ssr: false, // disable SSR
+});
 
 export default function HomePage() {
   return (
@@ -9,10 +17,7 @@ export default function HomePage() {
 
         {/* Terminal Panel */}
         <div className="flex-1 p-6 bg-[#0b0f26]/90 border-l border-white/10 text-white font-mono">
-          <div className="w-full h-full rounded-lg border border-white/10 p-4 text-cyan-400 text-sm">
-            <p className="mb-1">Welcome to Nebula Cipher</p>
-            <span className="text-cyan-600">&gt;</span>
-          </div>
+          <Terminal /> 
         </div>
       </div>
     </main>

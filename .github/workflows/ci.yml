@@ -1,4 +1,4 @@
-name: CI Workflow
+name: Frontend CI Workflow
 
 on:
   push:
@@ -13,30 +13,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout your repository
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18'
 
-      - name: Install dependencies (in frontend directory)
+      # Step 3: Install dependencies
+      - name: Install dependencies
         run: |
-          cd frontend  # Change to frontend directory
-          npm install
-          npm ci  # This ensures the exact dependency versions are installed
+          cd frontend
+          npm ci  # More reliable than npm install in CI
 
-      - name: Run tests
+      # Step 4: Run ESLint (code quality check)
+      - name: Run Lint
         run: |
-          cd frontend  # Ensure you're in the frontend directory
-          npm run test || true  # Running tests, ignore failures for now (or handle as needed)
+          cd frontend
+          npm run lint
 
-      - name: Build the project
+      # Step 5: Run TypeScript type check (no emit)
+      - name: Run Type Check
         run: |
-          cd frontend  # Change to frontend directory
+          cd frontend
+          npx tsc --noEmit
+
+      # Step 6: Placeholder Tests (safe even if no tests exist yet)
+      - name: Run Tests (Placeholder)
+        run: |
+          cd frontend
+          echo "No tests implemented yet. Skipping..."
+
+      # Step 7: Build the frontend
+      - name: Build frontend
+        run: |
+          cd frontend
           npm run build
-
-      - name: Deploy (if needed)
-        run: |
-          # Deploy command here if you want to trigger deployment
