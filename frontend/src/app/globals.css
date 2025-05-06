@@ -115,13 +115,39 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
-    background-image: url('/bg.png');
+    background-image: url("/bg.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    image-rendering: auto; 
-
+    image-rendering: auto;
   }
+
+  /* In your global styles (globals.css or tailwind config) */
+  @keyframes cursor-blink {
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  .terminal-input {
+    border-bottom: 2px solid #00b5d1; /* Cosmos blue border */
+    animation: cursor-blink 0.8s step-end infinite;
+  }
+
+  .terminal-output {
+    color: #d1d5db; /* Gray text */
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
   
 }
