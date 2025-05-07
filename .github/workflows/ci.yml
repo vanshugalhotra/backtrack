@@ -1,4 +1,4 @@
-name: Frontend CI Workflow
+name: CI Workflow
 
 on:
   push:
@@ -9,7 +9,8 @@ on:
       - dev  # Trigger on PR to dev branch
 
 jobs:
-  build:
+  # Frontend Job
+  frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,32 +18,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js environment
-      - name: Set up Node.js
+      # Step 2: Set up Node.js environment for frontend
+      - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
           node-version: '18'
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
+      # Step 3: Install frontend dependencies
+      - name: Install frontend dependencies
         run: |
           cd frontend
           npm ci  # More reliable than npm install in CI
 
-      # Step 4: Run ESLint (code quality check)
-      - name: Run Lint
+      # Step 4: Run ESLint (code quality check) for frontend
+      - name: Run frontend Lint
         run: |
           cd frontend
           npm run lint
 
-      # Step 5: Run TypeScript type check (no emit)
-      - name: Run Type Check
+      # Step 5: Run TypeScript type check (no emit) for frontend
+      - name: Run frontend Type Check
         run: |
           cd frontend
           npx tsc --noEmit
 
-      # Step 6: Placeholder Tests (safe even if no tests exist yet)
-      - name: Run Tests (Placeholder)
+      # Step 6: Placeholder Tests for frontend
+      - name: Run frontend Tests (Placeholder)
         run: |
           cd frontend
           echo "No tests implemented yet. Skipping..."
@@ -51,4 +52,50 @@ jobs:
       - name: Build frontend
         run: |
           cd frontend
+          npm run build
+
+  # Backend Job
+  backend:
+    runs-on: ubuntu-latest
+    needs: frontend  # Make sure frontend job is successful before running the backend job
+
+    steps:
+      # Step 1: Checkout your repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js environment for backend
+      - name: Set up Node.js for backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      # Step 3: Install backend dependencies
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci  # More reliable than npm install in CI
+
+      # Step 4: Run ESLint (code quality check) for backend
+      - name: Run backend Lint
+        run: |
+          cd backend
+          npm run lint
+
+      # Step 5: Run TypeScript type check (no emit) for backend
+      - name: Run backend Type Check
+        run: |
+          cd backend
+          npx tsc --noEmit
+
+      # Step 6: Run backend tests (if you have tests)
+      - name: Run backend Tests
+        run: |
+          cd backend
+          npm run test:e2e  # Or your backend test command
+
+      # Step 7: Build the backend
+      - name: Build backend
+        run: |
+          cd backend
           npm run build
