@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,8 @@ async function bootstrap() {
       transform: true, // Automatically transform payloads into DTO instances
     }),
   );
+
+  app.useGlobalFilters(new HttpExceptionFilter()); // Use the custom exception filter
 
   // Start the app
   await app.listen(process.env.PORT ?? 3000);
