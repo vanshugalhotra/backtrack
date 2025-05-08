@@ -75,8 +75,7 @@ jobs:
         run: |
           cd backend
           npm ci  # More reliable than npm install in CI
-      - name: Generate Prisma Client
-        run: npx prisma generate
+          npx prisma generate
         
       # Step 4: Run ESLint (code quality check) for backend
       - name: Run backend Lint
