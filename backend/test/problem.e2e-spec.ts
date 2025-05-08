@@ -1,7 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+  INestApplication,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import * as dotenv from 'dotenv'; 
+
+dotenv.config({ path: '.env.test' });
 
 describe('Problems API (e2e)', () => {
   let app: INestApplication;
@@ -55,13 +62,17 @@ describe('Problems API (e2e)', () => {
   });
 
   it('/api/v1/problems/:slug (GET) - should return problem', async () => {
-    const res = await request(app.getHttpServer()).get('/api/v1/problems/test-problem');
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/problems/test-problem',
+    );
     expect(res.status).toBe(200);
     expect(res.body.name).toBe('Test Problem');
   });
 
   it('/api/v1/problems/:slug (DELETE) - should delete problem', async () => {
-    const res = await request(app.getHttpServer()).delete('/api/v1/problems/test-problem');
+    const res = await request(app.getHttpServer()).delete(
+      '/api/v1/problems/test-problem',
+    );
     expect(res.status).toBe(200);
     expect(res.body.slug).toBe('test-problem');
   });
@@ -106,21 +117,46 @@ describe('Problems API (e2e)', () => {
   });
 
   it('/api/v1/problems/:slug (GET) - should return 404 for non-existent problem', async () => {
-    const res = await request(app.getHttpServer()).get('/api/v1/problems/invalid-slug');
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/problems/invalid-slug',
+    );
     expect(res.status).toBe(404);
     expect(res.body.message).toBe('Problem with slug "invalid-slug" not found');
   });
 
   it('/api/v1/problems/:slug (DELETE) - should return 404 for non-existent problem', async () => {
-    const res = await request(app.getHttpServer()).delete('/api/v1/problems/invalid-slug');
+    const res = await request(app.getHttpServer()).delete(
+      '/api/v1/problems/invalid-slug',
+    );
     expect(res.status).toBe(404);
     expect(res.body.message).toBe('Problem with slug "invalid-slug" not found');
   });
 
   it('/api/v1/problems/:slug (GET) - should return 404 for invalid slug format', async () => {
-    const res = await request(app.getHttpServer()).get('/api/v1/problems/invalid#slug');
+    const res = await request(app.getHttpServer()).get(
+      '/api/v1/problems/invalid#slug',
+    );
     expect(res.status).toBe(404);
     expect(res.body.message).toBe('Problem with slug "invalid" not found');
+  });
+
+  it('/api/v1/problems (POST) - should return 400 for invalid slug format', async () => {
+    const invalidSlugProblem = {
+      name: 'Invalid Slug Problem',
+      slug: 'Invalid_Slug!', // ❌ Invalid format: uppercase + special character
+      difficulty: 'EASY',
+      points: 10,
+      exePath: '/bin/test.exe',
+      description: 'Problem with bad slug',
+      iconPath: '/icons/test.png',
+    };
+
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/problems')
+      .send(invalidSlugProblem);
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain('Slug must be lowercase, kebab-case');
   });
 
   afterAll(async () => {
