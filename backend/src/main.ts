@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,9 +10,12 @@ async function bootstrap() {
   // Enable global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // Strip out properties that are not defined in the DTO
-      forbidNonWhitelisted: true, // Throw error if properties are not in the DTO
-      transform: true, // Automatically transform payloads into DTO instances
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
 
@@ -22,7 +26,14 @@ async function bootstrap() {
     prefix: 'api/v', // Prefix for the versioned routes
   });
 
-  
+  app.use(helmet()); // Use helmet for security
+
+  app.enableCors({
+    origin: ['http://localhost:3000'], // replace with your frontend domain(s)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   // Start the app
   await app.listen(process.env.PORT ?? 3000);
 }
