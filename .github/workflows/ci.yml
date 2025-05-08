@@ -75,7 +75,11 @@ jobs:
         run: |
           cd backend
           npm ci  # More reliable than npm install in CI
-
+      - name: Debug ESLint Versions
+        run: |
+          npm ls eslint
+          npm ls @typescript-eslint/eslint-plugin
+          npm ls @typescript-eslint/parser
       # Step 4: Run ESLint (code quality check) for backend
       - name: Run backend Lint
         run: |
