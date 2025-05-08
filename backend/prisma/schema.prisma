@@ -9,16 +9,16 @@ datasource db {
 }
 
 model Problem {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
-  slug        String    @unique
+  slug        String     @unique
   difficulty  Difficulty
   points      Int
-  exePath     String    // path to .exe file on disk or in container
-  description String    // markdown or HTML
-  iconPath    String?   // optional path to the icon file (could be a URL or file path)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  exePath     String // path to .exe file on disk or in container
+  description String // markdown or HTML
+  iconPath    String? // optional path to the icon file (could be a URL or file path)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 // Enum for difficulty levels

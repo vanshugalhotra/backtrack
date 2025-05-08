@@ -11,31 +11,31 @@ import { Difficulty } from '@prisma/client';
 export class CreateProblemDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message: 'Slug must be lowercase, kebab-case',
   })
-  slug: string;
+  slug!: string;
 
   @IsEnum(Difficulty)
-  difficulty: Difficulty;
+  difficulty!: Difficulty;
 
   @IsInt()
   @Min(0)
-  points: number;
+  points!: number;
 
   @IsString()
   @IsNotEmpty()
-  exePath: string;
+  exePath!: string;
 
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description!: string;
 
   @IsString()
   @IsNotEmpty()
-  iconPath: string;
+  iconPath!: string;
 }
