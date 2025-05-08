@@ -95,11 +95,6 @@ jobs:
           cd backend
           npx prisma generate
 
-      - name: Apply Prisma schema (migrate or push)
-        run: |
-          cd backend
-          npx prisma migrate deploy --preview-feature || npx prisma db push
-
       - name: Run backend Lint
         run: |
           cd backend
