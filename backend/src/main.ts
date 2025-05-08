@@ -34,7 +34,12 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Start the app
-  await app.listen(process.env.PORT ?? 3000);
+  // Start the app and catch any potential rejection
+  await app.listen(process.env.PORT ?? 3000).catch((err) => {
+    console.error('Error starting server:', err);
+  });
 }
-bootstrap();
+// Wrap the call to bootstrap with a rejection handler
+bootstrap().catch((err) => {
+  console.error('Unhandled rejection in bootstrap:', err);
+});

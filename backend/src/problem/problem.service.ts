@@ -7,7 +7,8 @@ import { LoggerService } from 'src/common/logger/logger.service';
 
 @Injectable() // This decorator marks the class as a provider (a service) that can be injected into other classes
 export class ProblemService {
-  constructor(private prisma: PrismaService,
+  constructor(
+    private prisma: PrismaService,
     private logger: LoggerService, // Injecting a logger service for logging purposes
   ) {} // Inject PrismaService into the constructor
 
@@ -58,7 +59,7 @@ export class ProblemService {
 
     return this.prisma.problem.update({
       where: { slug },
-      data: updateProblemDto
+      data: updateProblemDto,
     });
   }
 }

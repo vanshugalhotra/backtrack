@@ -1,7 +1,16 @@
-import { Controller, Get, Body, Post, Param, Delete, Put, Version} from '@nestjs/common'; 
-import { ProblemService } from './problem.service'; 
-import { Problem } from '@prisma/client'; 
-import { CreateProblemDto } from './dto/create-problem.dto'; 
+import {
+  Controller,
+  Get,
+  Body,
+  Post,
+  Param,
+  Delete,
+  Put,
+  Version,
+} from '@nestjs/common';
+import { ProblemService } from './problem.service';
+import { Problem } from '@prisma/client';
+import { CreateProblemDto } from './dto/create-problem.dto';
 import { UpdateProblemDto } from './dto/update-problem.dto';
 
 @Controller('problems')
@@ -34,7 +43,10 @@ export class ProblemController {
 
   @Put(':slug') // PUT /v1/problems/:slug
   @Version('1')
-  updateProblem(@Param('slug') slug: string, @Body() updateProblemDto: UpdateProblemDto) {
+  updateProblem(
+    @Param('slug') slug: string,
+    @Body() updateProblemDto: UpdateProblemDto,
+  ) {
     return this.problemService.updateProblemBySlug(slug, updateProblemDto);
   }
 }
