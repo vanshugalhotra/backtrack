@@ -56,8 +56,8 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: backtrack_test
         ports:
           - 5432:5432
@@ -81,10 +81,12 @@ jobs:
           cd backend
           npm ci
 
-      - name: Create .env.test file
+      - name: Set environment variables for testing
         run: |
-          cd backend
-          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/backtrack_test" > .env.test
+          echo "DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/backtrack_test" > backend/.env.test
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> backend/.env.test
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> backend/.env.test
+          echo "POSTGRES_DB=backtrack_test" >> backend/.env.test
 
       - name: Generate Prisma client
         run: |
