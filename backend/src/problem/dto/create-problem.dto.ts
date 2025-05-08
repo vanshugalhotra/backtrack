@@ -1,4 +1,11 @@
-import { IsEnum, IsInt, IsNotEmpty, IsString, Min, Matches } from 'class-validator';
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Min,
+  Matches,
+} from 'class-validator';
 import { Difficulty } from '@prisma/client';
 
 export class CreateProblemDto {
@@ -11,7 +18,6 @@ export class CreateProblemDto {
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message: 'Slug must be lowercase, kebab-case',
   })
-  
   slug: string;
 
   @IsEnum(Difficulty)
