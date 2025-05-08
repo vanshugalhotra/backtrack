@@ -14,41 +14,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js environment for frontend
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
           node-version: '22'
 
-      # Step 3: Install frontend dependencies
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm ci  # More reliable than npm install in CI
+          npm ci
 
-      # Step 4: Run ESLint (code quality check) for frontend
       - name: Run frontend Lint
         run: |
           cd frontend
           npm run lint
 
-      # Step 5: Run TypeScript type check (no emit) for frontend
       - name: Run frontend Type Check
         run: |
           cd frontend
           npx tsc --noEmit
 
-      # Step 6: Placeholder Tests for frontend
       - name: Run frontend Tests (Placeholder)
         run: |
           cd frontend
           echo "No tests implemented yet. Skipping..."
 
-      # Step 7: Build the frontend
       - name: Build frontend
         run: |
           cd frontend
@@ -57,45 +50,67 @@ jobs:
   # Backend Job
   backend:
     runs-on: ubuntu-latest
-    needs: frontend  # Make sure frontend job is successful before running the backend job
+    needs: frontend
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: backtrack_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      # Step 1: Checkout your repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js environment for backend
       - name: Set up Node.js for backend
         uses: actions/setup-node@v2
         with:
           node-version: '22'
 
-      # Step 3: Install backend dependencies
       - name: Install backend dependencies
         run: |
           cd backend
-          npm ci  # More reliable than npm install in CI
+          npm ci
+
+      - name: Create .env.test file
+        run: |
+          cd backend
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/backtrack_test" > .env.test
+
+      - name: Generate Prisma client
+        run: |
+          cd backend
           npx prisma generate
-        
-      # Step 4: Run ESLint (code quality check) for backend
+
+      - name: Apply Prisma schema (migrate or push)
+        run: |
+          cd backend
+          npx prisma migrate deploy --preview-feature || npx prisma db push
+
       - name: Run backend Lint
         run: |
           cd backend
           npm run lint
 
-      # Step 5: Run TypeScript type check (no emit) for backend
       - name: Run backend Type Check
         run: |
           cd backend
           npx tsc --noEmit
 
-      # Step 6: Run backend tests (if you have tests)
       - name: Run backend Tests
         run: |
           cd backend
-          npm run test:e2e  # Or your backend test command
+          npm run test:e2e
 
-      # Step 7: Build the backend
       - name: Build backend
         run: |
           cd backend
