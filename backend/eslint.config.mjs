@@ -20,7 +20,6 @@ export default tseslint.config(
       sourceType: 'commonjs',
       parserOptions: {
         project: ['./tsconfig.json'],
-        projectService: true,
         tsconfigRootDir: import.meta.dirname,
         noErrorOnMissing: true,
       },
@@ -28,9 +27,11 @@ export default tseslint.config(
   },
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/no-unsafe-call': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
+      '@typescript-eslint/require-await': 'error',
     },
-  },
+  }
 );
