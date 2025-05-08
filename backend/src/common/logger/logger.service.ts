@@ -16,15 +16,9 @@ export class LoggerService {
           format: winston.format.combine(
             winston.format.colorize(),
             winston.format.timestamp(),
-            winston.format.printf(
-              (
-                info: winston.Logform.TransformableInfo & {
-                  timestamp: string;
-                  level: string;
-                  message: string;
-                },
-              ) => `${info.timestamp} ${info.level}: ${info.message}`,
-            ),
+            winston.format.printf((info) => {
+              return `${String(info.timestamp)} ${String(info.level)}: ${String(info.message)}`;
+            }),
           ),
         }),
       );
