@@ -88,6 +88,9 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> backend/.env.test
           echo "POSTGRES_DB=backtrack_test" >> backend/.env.test
 
+      - name: Set PRISMA_LOAD_ENV_FILE to .env.test
+        run: echo "PRISMA_LOAD_ENV_FILE=backend/.env.test" >> $GITHUB_ENV
+
       - name: Generate Prisma client
         run: |
           cd backend
