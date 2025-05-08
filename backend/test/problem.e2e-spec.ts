@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -12,19 +12,31 @@ describe('Problems API (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe()); // to match production behavior
+
+    // Match production behavior
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
+
+    app.enableVersioning({
+      type: VersioningType.URI,
+      prefix: 'api/v',
+    });
+
     await app.init();
   });
 
-  // Valid GET request (should return list)
-  it('/problems (GET) - should return list', async () => {
-    const res = await request(app.getHttpServer()).get('/problems');
+  it('/api/v1/problems (GET) - should return list', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/problems');
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
 
-  // Valid POST request (create new problem)
-  it('/problems (POST) - create new problem', async () => {
+  it('/api/v1/problems (POST) - create new problem', async () => {
     const newProblem = {
       name: 'Test Problem',
       slug: 'test-problem',
@@ -36,28 +48,25 @@ describe('Problems API (e2e)', () => {
     };
 
     const res = await request(app.getHttpServer())
-      .post('/problems')
+      .post('/api/v1/problems')
       .send(newProblem);
     expect(res.status).toBe(201);
     expect(res.body.slug).toBe('test-problem');
   });
 
-  // Valid GET request (should return problem)
-  it('/problems/:slug (GET) - should return problem', async () => {
-    const res = await request(app.getHttpServer()).get('/problems/test-problem');
+  it('/api/v1/problems/:slug (GET) - should return problem', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/problems/test-problem');
     expect(res.status).toBe(200);
     expect(res.body.name).toBe('Test Problem');
   });
 
-  // Valid DELETE request (should delete problem)
-  it('/problems/:slug (DELETE) - should delete problem', async () => {
-    const res = await request(app.getHttpServer()).delete('/problems/test-problem');
+  it('/api/v1/problems/:slug (DELETE) - should delete problem', async () => {
+    const res = await request(app.getHttpServer()).delete('/api/v1/problems/test-problem');
     expect(res.status).toBe(200);
     expect(res.body.slug).toBe('test-problem');
   });
 
-  // Invalid POST request (Missing required field)
-  it('/problems (POST) - should return 400 for invalid data (missing name)', async () => {
+  it('/api/v1/problems (POST) - should return 400 for missing name', async () => {
     const invalidProblem = {
       slug: 'invalid-problem',
       difficulty: 'EASY',
@@ -68,19 +77,18 @@ describe('Problems API (e2e)', () => {
     };
 
     const res = await request(app.getHttpServer())
-      .post('/problems')
+      .post('/api/v1/problems')
       .send(invalidProblem);
-    
-    expect(res.status).toBe(400);  // Validation should fail
-    expect(res.body.message).toContain('name should not be empty');  // Validation error message
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain('name should not be empty');
   });
 
-  // Invalid POST request (Invalid difficulty value)
-  it('/problems (POST) - should return 400 for invalid difficulty', async () => {
+  it('/api/v1/problems (POST) - should return 400 for invalid difficulty', async () => {
     const invalidProblem = {
       name: 'Invalid Difficulty Problem',
       slug: 'invalid-difficulty',
-      difficulty: 'SUPER_EASY', // Invalid difficulty value
+      difficulty: 'SUPER_EASY',
       points: 10,
       exePath: '/bin/test.exe',
       description: 'Test Description',
@@ -88,33 +96,31 @@ describe('Problems API (e2e)', () => {
     };
 
     const res = await request(app.getHttpServer())
-      .post('/problems')
+      .post('/api/v1/problems')
       .send(invalidProblem);
-    
-    expect(res.status).toBe(400);  // Validation should fail
-    expect(res.body.message).toContain('difficulty must be one of the following values: EASY, MEDIUM, HARD');
 
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain(
+      'difficulty must be one of the following values: EASY, MEDIUM, HARD',
+    );
   });
 
-  // Invalid GET request (Problem not found)
-  it('/problems/:slug (GET) - should return 404 for non-existent problem', async () => {
-    const res = await request(app.getHttpServer()).get('/problems/invalid-slug');
-    expect(res.status).toBe(404);  // Problem with 'invalid-slug' should not exist
-    expect(res.body.message).toBe('Problem with slug "invalid-slug" not found'); // Error message
+  it('/api/v1/problems/:slug (GET) - should return 404 for non-existent problem', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/problems/invalid-slug');
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe('Problem with slug "invalid-slug" not found');
   });
 
-  // Invalid DELETE request (Trying to delete non-existent problem)
-  it('/problems/:slug (DELETE) - should return 404 for non-existent problem', async () => {
-    const res = await request(app.getHttpServer()).delete('/problems/invalid-slug');
-    expect(res.status).toBe(404);  // Trying to delete a problem that does not exist
-    expect(res.body.message).toBe('Problem with slug "invalid-slug" not found'); // Error message
+  it('/api/v1/problems/:slug (DELETE) - should return 404 for non-existent problem', async () => {
+    const res = await request(app.getHttpServer()).delete('/api/v1/problems/invalid-slug');
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe('Problem with slug "invalid-slug" not found');
   });
 
-  // Invalid GET request (Invalid slug format)
-  it('/problems/:slug (GET) - should return 400 for invalid slug format', async () => {
-    const res = await request(app.getHttpServer()).get('/problems/invalid#slug');
-    expect(res.status).toBe(404);  // Invalid slug format should result in a 404
-    expect(res.body.message).toBe('Problem with slug \"invalid\" not found'); // Error message
+  it('/api/v1/problems/:slug (GET) - should return 404 for invalid slug format', async () => {
+    const res = await request(app.getHttpServer()).get('/api/v1/problems/invalid#slug');
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe('Problem with slug "invalid" not found');
   });
 
   afterAll(async () => {

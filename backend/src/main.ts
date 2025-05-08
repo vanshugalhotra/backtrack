@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
@@ -17,6 +17,12 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter()); // Use the custom exception filter
 
+  app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'api/v', // Prefix for the versioned routes
+  });
+
+  
   // Start the app
   await app.listen(process.env.PORT ?? 3000);
 }
