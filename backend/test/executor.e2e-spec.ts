@@ -12,6 +12,13 @@ import { ExecutorResponse } from 'src/executor/executor.service';
 
 dotenv.config({ path: '.env.test' });
 
+const isWindows = process.platform === 'win32';
+const binDir = './test-bin';
+
+function getExecutable(name: string) {
+  return `${binDir}/${name}${isWindows ? '.exe' : '.out'}`;
+}
+
 describe('Execute API (e2e)', () => {
   let app: INestApplication;
   let server: Parameters<typeof request>[0];
@@ -41,10 +48,12 @@ describe('Execute API (e2e)', () => {
   });
 
   it('/api/v1/execute (POST) - should return output on valid exe path', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/echo.exe',
-      input: 'Hello World',
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('echo'),
+        input: 'Hello World',
+      });
 
     const body = res.body as ExecutorResponse;
     expect(res.status).toBe(201);
@@ -55,10 +64,12 @@ describe('Execute API (e2e)', () => {
   });
 
   it('/api/v1/execute (POST) - should return 500 for non-existent executable path', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './not-found.exe',
-      input: 'Hello World',
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('nonexistent'), // Non-existent executable
+        input: 'Hello World',
+      });
 
     const body = res.body as HttpError;
     expect(res.status).toBe(500);
@@ -67,10 +78,12 @@ describe('Execute API (e2e)', () => {
   });
 
   it('/api/v1/execute (POST) - should return bad request', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/echo.exe', // Ensure this executable exists
-      // No input provided
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('echo'), // Ensure this executable exists
+        // No input provided
+      });
 
     expect(res.status).toBe(400);
   });
@@ -88,7 +101,7 @@ describe('Execute API (e2e)', () => {
     const res = await request(server)
       .post('/api/v1/execute')
       .send({
-        exePath: './test-bin/echo.exe', // Valid exePath
+        exePath: getExecutable('echo'), // Valid exePath
         input: { key: 'value' }, // Invalid input type (object instead of string)
       });
 
@@ -98,20 +111,24 @@ describe('Execute API (e2e)', () => {
   });
 
   it('/api/v1/execute (POST) - should return empty stdout, empty stderr, and exitCode 0 for silent executable', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/silent.exe',
-      input: 'Hello World',
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('silent'), // Path to a valid executable that does not produce output
+        input: 'Hello World',
+      });
     const body = res.body as ExecutorResponse;
     expect(res.status).toBe(201);
     expect(body.output).toBe('');
   });
 
   it('/api/v1/execute (POST) - should return empty output', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/echo.exe', // Path to a valid executable that accepts an empty input string
-      input: '', // Empty input string
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('echo'), // Path to a valid executable that accepts an empty input string
+        input: '', // Empty input string
+      });
 
     const body = res.body as ExecutorResponse;
     expect(res.status).toBe(201);
@@ -119,29 +136,35 @@ describe('Execute API (e2e)', () => {
   });
 
   it('/api/v1/execute (POST) - developer issue should return 400', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/echo.exe',
-      input: 123,
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('echo'),
+        input: 123,
+      });
 
     expect(res.status).toBe(400);
   });
 
   it('/api/v1/execute (POST) - multiple inputs', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/sum.exe',
-      input: '1 5',
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('sum'),
+        input: '1 5',
+      });
 
     const body = res.body as ExecutorResponse;
     expect(res.status).toBe(201);
     expect(body.output).toBe('6');
   });
   it('/api/v1/execute (POST) - nonzero exitcode', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      exePath: './test-bin/nonzero.exe',
-      input: '1 0',
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('nonzero'),
+        input: '1 0',
+      });
 
     const body = res.body as ExecutorResponse;
     expect(res.status).toBe(201);

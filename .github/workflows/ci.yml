@@ -3,10 +3,10 @@ name: CI Workflow
 on:
   push:
     branches:
-      - dev  # Trigger on push to dev branch
+      - dev # Trigger on push to dev branch
   pull_request:
     branches:
-      - dev  # Trigger on PR to dev branch
+      - dev # Trigger on PR to dev branch
 
 jobs:
   # Frontend Job
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js for frontend
         uses: actions/setup-node@v2
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install frontend dependencies
         run: |
@@ -49,7 +49,7 @@ jobs:
 
   # Backend Job
   backend:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: frontend
 
     services:
@@ -74,7 +74,7 @@ jobs:
       - name: Set up Node.js for backend
         uses: actions/setup-node@v2
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install backend dependencies
         run: |
@@ -96,9 +96,15 @@ jobs:
           cd backend
           npx prisma migrate deploy --preview-feature || npx prisma db push
 
+      - name: Compile C++ test binaries
+        run: |
+          cd backend/test-bin
+          chmod +x compile.sh
+          ./compile.sh
+
       - name: Ensure executables have proper permissions
         run: |
-          chmod +x ./test-bin/*.exe
+          chmod +x ./backend/test-bin/*.out
 
       - name: Run backend Lint
         run: |
