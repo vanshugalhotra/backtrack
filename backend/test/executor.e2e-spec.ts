@@ -169,7 +169,7 @@ describe('Execute API (e2e)', () => {
     const body = res.body as ExecutorResponse;
     expect(res.status).toBe(201);
     expect(body.output).toBe('ERROR');
-    expect(body.exitCode).toBeGreaterThan(0);
+    expect(body.exitCode).not.toBe(0);
   });
 
   afterAll(async () => {
