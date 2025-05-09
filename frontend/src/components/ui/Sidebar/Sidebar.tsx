@@ -3,16 +3,14 @@
 import React, { useState } from "react";
 import ChallengeList from "./ChallengeList";
 import { Menu, X } from "lucide-react";
-import useProblems from "@/hooks/useProblems"; // Import the custom hook
-import { Problem } from "../../../../types/problem"; // Import the type for problem
+import useProblems from "@/hooks/useProblems";
+import { Problem } from "../../../../types/problem";
 
 const Sidebar: React.FC = () => {
-  const [selectedChallenge, setSelectedChallenge] =
-    useState("Binary Black Hole");
+  const [selectedChallenge, setSelectedChallenge] = useState("Binary Black Hole");
   const [open, setOpen] = useState(false);
 
-  // Use the useProblems hook to fetch problems
-  const { problems, loading, error } = useProblems();
+  const { problems} = useProblems();
 
   return (
     <>
@@ -35,17 +33,11 @@ const Sidebar: React.FC = () => {
             BackTrack
           </h2>
         </div>
-
-        {/* Show loading or error messages */}
-        {loading && <p>Loading problems...</p>}
-        {error && <p className="text-red-500">Error: {error}</p>}
-
-        {/* Render the problems if data is available */}
-        {!loading && !error && (
+        {problems && (
           <ChallengeList
             challenges={problems.map((problem: Problem) => ({
-              name: problem.name, // Display the problem's name
-              icon: "/icons/blackhole.svg", // You can update this based on problem category if you want
+              name: problem.name,
+              icon: "/icons/blackhole.svg",
             }))}
             selectedChallenge={selectedChallenge}
             onSelect={setSelectedChallenge}
@@ -66,21 +58,16 @@ const Sidebar: React.FC = () => {
           <h2 className="text-2xl font-extrabold mt-2">BackTrack</h2>
         </div>
 
-        {/* Show loading or error messages */}
-        {loading && <p>Loading problems...</p>}
-        {error && <p className="text-red-500">Error: {error}</p>}
-
-        {/* Render the problems if data is available */}
-        {!loading && !error && (
+        {problems && (
           <ChallengeList
             challenges={problems.map((problem: Problem) => ({
               name: problem.name,
-              icon: "/icons/blackhole.svg", // You can customize this based on the problem type
+              icon: "/icons/blackhole.svg",
             }))}
             selectedChallenge={selectedChallenge}
             onSelect={(name) => {
               setSelectedChallenge(name);
-              setOpen(false); // auto-close on selection
+              setOpen(false);
             }}
           />
         )}
