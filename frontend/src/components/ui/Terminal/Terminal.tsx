@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ProblemHeader from "./ProblemHeader";
 import { useStarfield } from "@/hooks/useStarField";
 import { useProblemContext } from "../../../../context/ProblemContext";
-// import { useGlobalUI } from "../../../../context/GlobalUIContext";
+import { useExecute } from "@/hooks/useExecutor";
 
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<string[]>([]);
@@ -12,7 +12,8 @@ const Terminal: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { selectedProblem } = useProblemContext();
-  // const { setLoading, setError } = useGlobalUI();
+
+  const { executeCommand } = useExecute();
 
   const handleExecute = async () => {
     if (!input.trim()) {
@@ -20,17 +21,23 @@ const Terminal: React.FC = () => {
       return;
     }
 
+    if (!selectedProblem) {
+      setHistory((prev) => [...prev, "Error: No Problem Selected!"]);
+      return;
+    }
+
     try {
-      // Simulate a backend request for now
-      const response = { ok: false, message: "Backend not ready" }; // Mocked response
+      const exePath = `./executables/${
+        selectedProblem?.exePath || "dummy.exe"
+      }`;
 
-      if (!response.ok) {
-        throw new Error(response.message);
-      }
+      const response = await executeCommand(exePath, input);
 
-      // Simulate backend success
-      const result = { output: "Command executed successfully" };
-      setHistory((prev) => [...prev, `> ${input}`, result.output]);
+      setHistory((prev) => [
+        ...prev,
+        `> ${input}`,
+        response?.output || "No output received",
+      ]);
     } catch (error) {
       setHistory((prev) => [
         ...prev,
@@ -48,6 +55,10 @@ const Terminal: React.FC = () => {
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
   }, [history]);
 
+  useEffect(() => {
+    setHistory([]); // Clear the history whenever selectedProblem changes
+  }, [selectedProblem]);
+
   return (
     <div className="relative w-full h-full overflow-hidden rounded-xl shadow-2xl border border-white/10 backdrop-blur-2xl">
       <canvas
@@ -63,7 +74,7 @@ const Terminal: React.FC = () => {
           <span className="w-3 h-3 bg-green-500 rounded-full"></span>
         </div>
 
-        <ProblemHeader problem={selectedProblem}/>
+        <ProblemHeader problem={selectedProblem} />
 
         <div
           ref={scrollRef}
