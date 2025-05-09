@@ -6,6 +6,7 @@ import ChallengeCard from "./ChallengeCard";
 type Challenge = {
   name: string;
   icon: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
 };
 
 type Props = {
@@ -22,6 +23,7 @@ const ChallengeList: React.FC<Props> = ({ challenges, selectedChallenge, onSelec
           key={challenge.name}
           icon={challenge.icon}
           name={challenge.name}
+          difficulty={challenge.difficulty}
           selected={selectedChallenge === challenge.name}
           onSelect={() => onSelect(challenge.name)}
         />

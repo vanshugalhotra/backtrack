@@ -7,10 +7,11 @@ import useProblems from "@/hooks/useProblems";
 import { Problem } from "../../../../types/problem";
 
 const Sidebar: React.FC = () => {
-  const [selectedChallenge, setSelectedChallenge] = useState("Binary Black Hole");
+  const [selectedChallenge, setSelectedChallenge] =
+    useState("Binary Black Hole");
   const [open, setOpen] = useState(false);
 
-  const { problems} = useProblems();
+  const { problems } = useProblems();
 
   return (
     <>
@@ -37,7 +38,10 @@ const Sidebar: React.FC = () => {
           <ChallengeList
             challenges={problems.map((problem: Problem) => ({
               name: problem.name,
-              icon: "/icons/blackhole.svg",
+              icon: `/icons/${
+                problem.iconPath ? problem.iconPath : "blackhole.svg"
+              }`,
+              difficulty: problem.difficulty,
             }))}
             selectedChallenge={selectedChallenge}
             onSelect={setSelectedChallenge}
@@ -62,7 +66,10 @@ const Sidebar: React.FC = () => {
           <ChallengeList
             challenges={problems.map((problem: Problem) => ({
               name: problem.name,
-              icon: "/icons/blackhole.svg",
+              icon: `/icons/${
+                problem.iconPath ? problem.iconPath : "blackhole.svg"
+              }`,
+              difficulty: problem.difficulty,
             }))}
             selectedChallenge={selectedChallenge}
             onSelect={(name) => {
