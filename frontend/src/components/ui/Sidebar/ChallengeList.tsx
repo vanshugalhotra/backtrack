@@ -6,16 +6,17 @@ import ChallengeCard from "./ChallengeCard";
 type Challenge = {
   name: string;
   icon: string;
+  slug: string;
   difficulty: "EASY" | "MEDIUM" | "HARD";
 };
 
 type Props = {
   challenges: Challenge[];
-  selectedChallenge: string;
-  onSelect: (name: string) => void;
+  selectedSlug: string;
+  onSelect: (slug: string) => void;
 };
 
-const ChallengeList: React.FC<Props> = ({ challenges, selectedChallenge, onSelect }) => {
+const ChallengeList: React.FC<Props> = ({ challenges, selectedSlug, onSelect }) => {
   return (
     <div className="space-y-4">
       {challenges.map((challenge) => (
@@ -24,8 +25,8 @@ const ChallengeList: React.FC<Props> = ({ challenges, selectedChallenge, onSelec
           icon={challenge.icon}
           name={challenge.name}
           difficulty={challenge.difficulty}
-          selected={selectedChallenge === challenge.name}
-          onSelect={() => onSelect(challenge.name)}
+          selected={selectedSlug === challenge.slug}
+          onSelect={() => onSelect(challenge.slug)}
         />
       ))}
     </div>

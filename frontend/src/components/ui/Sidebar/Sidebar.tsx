@@ -5,13 +5,14 @@ import ChallengeList from "./ChallengeList";
 import { Menu, X } from "lucide-react";
 import useProblems from "@/hooks/useProblems";
 import { Problem } from "../../../../types/problem";
+import { useProblemContext } from "../../../../context/ProblemContext";
 
 const Sidebar: React.FC = () => {
-  const [selectedChallenge, setSelectedChallenge] =
-    useState("Binary Black Hole");
   const [open, setOpen] = useState(false);
 
   const { problems } = useProblems();
+  const { selectedProblem, setSelectedProblem } = useProblemContext();
+  const selectedSlug = selectedProblem?.slug || "";
 
   return (
     <>
@@ -38,13 +39,19 @@ const Sidebar: React.FC = () => {
           <ChallengeList
             challenges={problems.map((problem: Problem) => ({
               name: problem.name,
+              slug: problem.slug,
               icon: `/icons/${
                 problem.iconPath ? problem.iconPath : "blackhole.svg"
               }`,
               difficulty: problem.difficulty,
             }))}
-            selectedChallenge={selectedChallenge}
-            onSelect={setSelectedChallenge}
+            selectedSlug={selectedSlug}
+            onSelect={(slug) => {
+              const problem = problems.find((p) => p.slug === slug);
+              if (problem) {
+                setSelectedProblem(problem);
+              }
+            }}
           />
         )}
       </aside>
@@ -66,15 +73,19 @@ const Sidebar: React.FC = () => {
           <ChallengeList
             challenges={problems.map((problem: Problem) => ({
               name: problem.name,
+              slug: problem.slug,
               icon: `/icons/${
                 problem.iconPath ? problem.iconPath : "blackhole.svg"
               }`,
               difficulty: problem.difficulty,
             }))}
-            selectedChallenge={selectedChallenge}
-            onSelect={(name) => {
-              setSelectedChallenge(name);
-              setOpen(false);
+            selectedSlug={selectedSlug}
+            onSelect={(slug) => {
+              const problem = problems.find((p) => p.slug === slug);
+              if (problem) {
+                setSelectedProblem(problem);
+                setOpen(false);
+              }
             }}
           />
         )}
