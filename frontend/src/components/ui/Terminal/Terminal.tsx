@@ -3,12 +3,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import ProblemHeader from "./ProblemHeader";
 import { useStarfield } from "@/hooks/useStarField";
+import { useProblemContext } from "../../../../context/ProblemContext";
+// import { useGlobalUI } from "../../../../context/GlobalUIContext";
 
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<string[]>([]);
   const [input, setInput] = useState<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { selectedProblem } = useProblemContext();
+  // const { setLoading, setError } = useGlobalUI();
 
   const handleExecute = async () => {
     if (!input.trim()) {
@@ -30,8 +34,9 @@ const Terminal: React.FC = () => {
     } catch (error) {
       setHistory((prev) => [
         ...prev,
-        `> ${input}`, error instanceof Error ? error.message : "An unknown error occurred",]
-      );
+        `> ${input}`,
+        error instanceof Error ? error.message : "An unknown error occurred",
+      ]);
     } finally {
       setInput("");
     }
@@ -58,7 +63,7 @@ const Terminal: React.FC = () => {
           <span className="w-3 h-3 bg-green-500 rounded-full"></span>
         </div>
 
-        <ProblemHeader />
+        <ProblemHeader problem={selectedProblem}/>
 
         <div
           ref={scrollRef}
