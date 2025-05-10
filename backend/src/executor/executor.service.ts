@@ -17,25 +17,46 @@ export type ExecutorResponse = {
 
 @Injectable()
 export class ExecutorService {
+  private readonly allowedDirectories = [
+    './executables',
+    './test-bin',
+    'executables',
+    'test-bin',
+  ];
   constructor(private readonly logger: LoggerService) {}
+
+  private isAllowedPath(exePath: string): boolean {
+    const isAllowedDir = this.allowedDirectories.some((dir) =>
+      exePath.startsWith(dir),
+    );
+    if (isAllowedDir) {
+      return true;
+    }
+    this.logger.error(`Unauthorized executable path: ${exePath}`);
+    return false;
+  }
 
   async runExecutable(
     exePath: string,
     input: unknown,
   ): Promise<ExecutorResponse> {
-    // Check if input is provided at all
+    this.logger.log(`Starting execution of: ${exePath}`);
+
+    if (!this.isAllowedPath(exePath)) {
+      throw new PermissionDeniedError('Unauthorized executable path.', {
+        exePath,
+      });
+    }
     if (input === undefined || input === null) {
       this.logger.error('Input field is missing');
       throw new BadRequestError('`input` field is required.');
     }
 
-    // Check if executable exists
     if (!fs.existsSync(exePath)) {
       this.logger.error(`Executable not found at: ${exePath}`);
       throw new InternalServerError('Executable path is invalid.', { exePath });
     }
 
-    // Check if executable is accessible
     try {
       fs.accessSync(exePath, fs.constants.X_OK);
     } catch {
@@ -46,17 +67,18 @@ export class ExecutorService {
       );
     }
 
-    // If input is empty string, return empty output (user mistake)
     if (input === '') {
       this.logger.warn('Input is an empty string — returning empty output');
       return { output: '', exitCode: 0 };
     }
 
-    // Convert other input types to string to pass to executable
     if (typeof input !== 'string') {
-      this.logger.error('Invalid input: must be a string');
+      this.logger.warn(
+        `Input is not a string. Converting to string: ${JSON.stringify(input)}`,
+      );
       input = JSON.stringify(input);
     }
+
     const inputStr = typeof input === 'string' ? input : String(input);
 
     return new Promise((resolve, reject) => {
@@ -85,12 +107,13 @@ export class ExecutorService {
       child.stdin.end();
 
       child.stdout.on('data', (data: Buffer) => {
-        stdout += data.toString();
+        const output = data.toString();
+        stdout += output;
       });
 
       child.on('error', (err) => {
-        this.logger.error(`Execution failed: ${err.message}`);
         clearTimeout(timeout);
+        this.logger.error(`Execution failed: ${err.message}`);
         reject(
           new InternalServerError('Execution failed.', { error: err.message }),
         );
@@ -100,8 +123,12 @@ export class ExecutorService {
         clearTimeout(timeout);
         const exitCode = code ?? -1;
 
+        this.logger.log(
+          `Execution finished for ${exePath} with exit code ${exitCode}`,
+        );
+
         if (exitCode !== 0) {
-          this.logger.warn(`Non-zero exit code: ${exitCode}`);
+          this.logger.warn(`Non-zero exit code received: ${exitCode}`);
           resolve({ output: 'ERROR', exitCode });
         } else {
           resolve({ output: stdout.trim(), exitCode });
