@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Problem } from '../../../../types/problem';
+import React from "react";
+import { Problem } from "../../../../types/problem";
 
 type Props = {
   problem: Problem | null;
 };
 
-const ProblemHeader: React.FC<Props> = ({problem}) => {
+const ProblemHeader: React.FC<Props> = ({ problem }) => {
   return (
     <div className="text-center mb-6">
       <h1 className="text-xl text-cyan-400 font-semibold tracking-widest uppercase">
@@ -17,7 +17,7 @@ const ProblemHeader: React.FC<Props> = ({problem}) => {
         {problem ? problem.name : "No problem selected"}
       </h2>
       <p className="text-sm text-gray-400 mt-2">
-        Solve the challenge by decoding the pattern.
+        Type <code className="text-yellow-400">$clear</code> to clear the terminal.
       </p>
     </div>
   );
