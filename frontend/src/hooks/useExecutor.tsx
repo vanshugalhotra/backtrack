@@ -23,7 +23,7 @@ export const useExecute = () => {
       const data: ExecutorResponse = await res.json(); // Define the response type
 
       if (!res.ok) {
-        throw new Error(data?.error || "Execution failed");
+        throw new Error(data?.message || "Execution failed");
       }
 
       return data;
