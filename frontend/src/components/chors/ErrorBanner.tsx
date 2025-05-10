@@ -15,7 +15,7 @@ const ErrorBanner = ({ message }: { message: string }) => {
           <div className="flex flex-col">
             <span className="font-semibold text-lg">{message}</span>
             <span className="text-sm opacity-80 mt-1">
-              Please check your internet connection or try again later.
+              Some error Occured.
             </span>
           </div>
         </div>

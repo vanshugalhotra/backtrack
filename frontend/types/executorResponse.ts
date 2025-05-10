@@ -1,5 +1,5 @@
 export type ExecutorResponse = {
   output?: string;
-  error?: string;
+  message?: string;
   exitCode: number;
 };
