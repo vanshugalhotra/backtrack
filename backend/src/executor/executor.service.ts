@@ -17,7 +17,24 @@ export type ExecutorResponse = {
 
 @Injectable()
 export class ExecutorService {
+  private readonly allowedDirectories = [
+    './executables',
+    './test-bin',
+    'executables',
+    'test-bin',
+  ];
   constructor(private readonly logger: LoggerService) {}
+
+  private isAllowedPath(exePath: string): boolean {
+    const isAllowedDir = this.allowedDirectories.some((dir) =>
+      exePath.startsWith(dir),
+    );
+    if (isAllowedDir) {
+      return true;
+    }
+    this.logger.error(`Unauthorized executable path: ${exePath}`);
+    return false;
+  }
 
   async runExecutable(
     exePath: string,
@@ -25,6 +42,11 @@ export class ExecutorService {
   ): Promise<ExecutorResponse> {
     this.logger.log(`Starting execution of: ${exePath}`);
 
+    if (!this.isAllowedPath(exePath)) {
+      throw new PermissionDeniedError('Unauthorized executable path.', {
+        exePath,
+      });
+    }
     if (input === undefined || input === null) {
       this.logger.error('Input field is missing');
       throw new BadRequestError('`input` field is required.');
