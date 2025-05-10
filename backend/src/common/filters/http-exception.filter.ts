@@ -1,9 +1,11 @@
 import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
 import { HttpError } from '../errors/http-error';
 import { Response, Request } from 'express';
+import { LoggerService } from '../logger/logger.service';
 
 @Catch(HttpError)
 export class HttpExceptionFilter implements ExceptionFilter {
+  constructor(private readonly logger: LoggerService) {}
   catch(exception: HttpError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -14,8 +16,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const message = exception.message || 'Something went wrong';
     const details = exception.details || null;
 
-    // Log the error details for debugging (you can enhance this with a logging library)
     console.error(`Error: ${message}, Status: ${status}, Details:`, details);
+    this.logger.error(
+      `[HttpException] ${request.method} ${request.url} - ${status} - ${message}` +
+        (details ? ` | Details: ${JSON.stringify(details)}` : ''),
+    );
 
     response.status(status).json({
       statusCode: status,
