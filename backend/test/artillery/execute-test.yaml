@@ -1,0 +1,32 @@
+config:
+  target: 'http://localhost:3333'
+  phases:
+    - duration: 60     # Simulate gradual ramp-up
+      arrivalRate: 10
+      name: 'Warm-up Phase'
+    - duration: 120    # Simulate sustained user load (~25 rps)
+      arrivalRate: 25
+      name: 'Steady Phase'
+    - duration: 30     # Short spike (simulate user bursts)
+      arrivalRate: 60
+      name: 'Spike Phase'
+    - duration: 60     # Cool down under normal load
+      arrivalRate: 20
+      name: 'Recovery Phase'
+
+  payload:
+    path: 'payload.csv'
+    fields:
+      - exePath
+      - input
+    order: sequence
+    skipHeader: true
+
+scenarios:
+  - name: Execute binary
+    flow:
+      - post:
+          url: '/api/v1/execute'
+          json:
+            exePath: '{{ exePath }}'
+            input: '{{ input }}'

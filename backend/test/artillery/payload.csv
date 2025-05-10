@@ -1,0 +1,10 @@
+exePath,input
+"executables/spirals.exe","0 0"
+"executables/spirals.exe","1 1"
+"executables/spirals.exe","2 2"
+"executables/cosmic.exe","10"
+"executables/cosmic.exe","20"
+"executables/supernova.exe","100"
+"executables/supernova.exe","200"
+"executables/spirals.exe","err"
+"executables/cosmic.exe","30"

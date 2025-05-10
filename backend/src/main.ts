@@ -2,7 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { GeneralExceptionFilter } from './common/filters/general-exception.filter';
 import helmet from 'helmet';
+import { LoggerService } from './common/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,7 +21,12 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new HttpExceptionFilter()); // Use the custom exception filter
+  const logger = new LoggerService();
+
+  app.useGlobalFilters(
+    new HttpExceptionFilter(logger),
+    new GeneralExceptionFilter(logger),
+  ); // Use the custom exception filter
 
   app.enableVersioning({
     type: VersioningType.URI,
