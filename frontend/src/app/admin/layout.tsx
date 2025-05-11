@@ -1,21 +1,27 @@
 // app/admin/layout.tsx
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { ReactNode } from 'react'
-import { LucideLayoutDashboard, LucidePlusCircle, LucideList, LucideSettings } from 'lucide-react'
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
+import {
+  LucideLayoutDashboard,
+  LucidePlusCircle,
+  LucideList,
+  LucideSettings,
+} from "lucide-react";
+import { Toaster } from "@/components/ui/sonner";
 
 const adminNavItems = [
-  { label: 'Dashboard', href: '/admin', icon: LucideLayoutDashboard },
-  { label: 'Add Problem', href: '/admin/problems/add', icon: LucidePlusCircle },
-  { label: 'Problems', href: '/admin/problems', icon: LucideList },
-  { label: 'Settings', href: '/admin/settings', icon: LucideSettings }, // Optional
-]
+  { label: "Dashboard", href: "/admin", icon: LucideLayoutDashboard },
+  { label: "Add Problem", href: "/admin/problems/add", icon: LucidePlusCircle },
+  { label: "Problems", href: "/admin/problems", icon: LucideList },
+  { label: "Settings", href: "/admin/settings", icon: LucideSettings }, // Optional
+];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <div className="flex min-h-screen bg-muted">
@@ -25,30 +31,33 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
         <nav className="space-y-2">
           {adminNavItems.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-md px-3 py-2 transition-colors',
+                  "flex items-center gap-3 rounded-md px-3 py-2 transition-colors",
                   isActive
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    ? "bg-gray-800 text-white"
+                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
                 )}
               >
                 <Icon className="w-5 h-5" />
                 <span>{item.label}</span>
               </Link>
-            )
+            );
           })}
         </nav>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6 overflow-auto">{children}</main>
+      <main className="flex-1 p-6 overflow-auto">
+        {children}
+        <Toaster richColors position="top-center" expand closeButton={true}/>
+      </main>
     </div>
-  )
+  );
 }
