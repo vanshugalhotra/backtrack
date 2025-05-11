@@ -1,4 +1,3 @@
-// app/admin/layout.tsx
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -24,9 +23,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="flex min-h-screen bg-muted">
+    <div
+      className="flex min-h-screen bg-muted"
+      style={{
+        backgroundImage: "url('/bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-950 text-white flex flex-col p-6 space-y-6">
+      <aside className="w-64 bg-gray-950 text-white flex flex-col p-6 space-y-6 z-10">
         <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
 
         <nav className="space-y-2">
@@ -54,7 +61,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6 overflow-auto">
+      <main className="flex-1 p-6 overflow-auto z-10">
         {children}
         <Toaster richColors position="top-center" expand closeButton={true}/>
       </main>

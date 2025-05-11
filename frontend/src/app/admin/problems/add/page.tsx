@@ -124,7 +124,7 @@ export default function AddProblemPage() {
   if (!isClient) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10">
       <Card className="w-full max-w-5xl shadow-lg border border-gray-200 rounded-2xl">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold text-gray-800">
