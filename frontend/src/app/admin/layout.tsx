@@ -33,10 +33,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       }}
     >
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-950 text-white flex flex-col p-6 space-y-6 z-10">
-        <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
+      <aside className="w-72 min-h-screen bg-gradient-to-b from-gray-950 to-gray-800 text-white flex flex-col px-6 py-8 border-r border-gray-700 rounded-l-xl shadow-xl">
+        <h1 className="text-3xl font-bold text-white tracking-tight mb-10">
+          BACKTRACK ADMIN
+        </h1>
 
-        <nav className="space-y-2">
+        <nav className="flex flex-col gap-4">
           {adminNavItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -46,24 +48,30 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 transition-colors",
+                  "flex items-center gap-4 p-4 rounded-lg transition-all duration-200 ease-in-out text-lg font-medium",
                   isActive
-                    ? "bg-gray-800 text-white"
-                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
+                    ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg transform scale-105"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700 hover:scale-105"
                 )}
               >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
+                <Icon className="w-6 h-6 transition-all duration-200 ease-in-out" />
+                <span className="font-semibold">{item.label}</span>
               </Link>
             );
           })}
         </nav>
-      </aside>
 
+        {/* Optional Footer */}
+        <div className="mt-auto pt-12 text-xs text-gray-400 text-center">
+          <p>
+            &copy; {new Date().getFullYear()} InfoTrek. All rights reserved.
+          </p>
+        </div>
+      </aside>
       {/* Main content */}
       <main className="flex-1 p-6 overflow-auto z-10">
         {children}
-        <Toaster richColors position="top-center" expand closeButton={true}/>
+        <Toaster richColors position="top-center" expand closeButton={true} />
       </main>
     </div>
   );
