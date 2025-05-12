@@ -2,12 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { LucideEdit, LucideTrash } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import Image from "next/image";
 
@@ -22,14 +17,9 @@ type ProblemCardProps = {
     iconPath?: string;
   };
   onDelete: (slug: string) => void;
-  onUpdate: (slug: string) => void;
 };
 
-export default function ProblemCard({
-  problem,
-  onDelete,
-  onUpdate,
-}: ProblemCardProps) {
+export default function ProblemCard({ problem, onDelete }: ProblemCardProps) {
   return (
     <Card
       key={problem.slug}
@@ -53,10 +43,14 @@ export default function ProblemCard({
           >
             {problem.difficulty}
           </span>
-          <span className="text-sm text-gray-400">Points: {problem.points}</span>
+          <span className="text-sm text-gray-400">
+            Points: {problem.points}
+          </span>
         </div>
 
-        <p className="text-gray-300 text-sm leading-relaxed">{problem.description}</p>
+        <p className="text-gray-300 text-sm leading-relaxed">
+          {problem.description}
+        </p>
 
         <div className="text-xs text-gray-500 mt-4">
           Created At: {format(new Date(problem.createdAt), "MMM dd, yyyy")}
@@ -71,10 +65,10 @@ export default function ProblemCard({
             <LucideTrash className="w-5 h-5 group-hover:text-red-700" />
             <span>Delete</span>
           </Button>
+
           <Button
             variant="outline"
             className="group flex items-center gap-2 bg-blue-600 text-white hover:bg-white hover:text-blue-600 transition-all duration-200 rounded-lg px-4 py-2 cursor-pointer"
-            onClick={() => onUpdate(problem.slug)}
           >
             <LucideEdit className="w-5 h-5 group-hover:text-blue-700" />
             <span>Update</span>
