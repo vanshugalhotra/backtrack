@@ -47,18 +47,15 @@ export default function ProblemsListPage() {
                 problem={problem}
                 onDelete={(slug) => {
                   setProblemToDelete(slug);
-                  setModalOpen(true); // Open the modal
-                }}
-                onUpdate={(slug) => {
-                  console.log("Update problem:", slug);
+                  setModalOpen(true);
                 }}
               />
             ))}
       </div>
       <DeleteModal
         isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)} // Close the modal on cancel
-        onConfirm={handleDelete} // Call handleDelete when confirmed
+        onClose={() => setModalOpen(false)} 
+        onConfirm={handleDelete} 
         problemSlug={problemToDelete ? problemToDelete : ""}
       />
     </div>
