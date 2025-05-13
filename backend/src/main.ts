@@ -41,6 +41,8 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.enableShutdownHooks();
+
   // Start the app and catch any potential rejection
   await app.listen(process.env.PORT ?? 3000).catch((err) => {
     console.error('Error starting server:', err);
