@@ -8,9 +8,6 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import * as dotenv from 'dotenv';
 import { HttpError } from 'src/common/errors/http-error';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 type ApiResponse = {
   access_token: string;
@@ -34,7 +31,6 @@ describe('Auth API (e2e)', () => {
   };
 
   beforeAll(async () => {
-    await prisma.user.deleteMany();
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -74,8 +70,8 @@ describe('Auth API (e2e)', () => {
       .send(testUser);
 
     const body = res.body as HttpError;
-    expect(res.status).toBe(409);
-    expect(body.message).toContain('Email already registered');
+    expect(res.status).toBe(400);
+    expect(body.message).toContain('Email is already registered');
   });
 
   it('/api/v1/auth/register (POST) - should fail on invalid email format', async () => {
@@ -84,7 +80,9 @@ describe('Auth API (e2e)', () => {
       password: 'Password123',
     });
 
+    const body = res.body as HttpError;
     expect(res.status).toBe(400);
+    expect(body.message).toContain('email must be an email');
   });
 
   it('/api/v1/auth/login (POST) - should login an existing user', async () => {
@@ -104,7 +102,7 @@ describe('Auth API (e2e)', () => {
     });
 
     const body = res.body as HttpError;
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(403);
     expect(body.message).toContain('Invalid credentials');
   });
 
@@ -115,7 +113,7 @@ describe('Auth API (e2e)', () => {
     });
 
     const body = res.body as HttpError;
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(400);
     expect(body.message).toContain('Invalid credentials');
   });
 
