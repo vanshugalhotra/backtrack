@@ -5,11 +5,11 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { GeneralExceptionFilter } from './common/filters/general-exception.filter';
 import helmet from 'helmet';
 import { LoggerService } from './common/logger/logger.service';
+import { BadRequestError } from './common/errors/http-error';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -18,9 +18,17 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
+      exceptionFactory: (errors) => {
+        const messages = errors.map((err) => {
+          if (err.constraints) {
+            return Object.values(err.constraints).join(', ');
+          }
+          return `${err.property} is invalid`;
+        });
+        return new BadRequestError(messages.join(', '));
+      },
     }),
   );
-
   const logger = new LoggerService();
 
   app.useGlobalFilters(

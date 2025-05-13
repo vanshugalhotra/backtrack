@@ -9,9 +9,7 @@ import { AppModule } from './../src/app.module';
 import * as dotenv from 'dotenv';
 import { HttpError } from 'src/common/errors/http-error';
 
-import { Prisma, PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { Prisma } from '@prisma/client';
 
 type Problem = Prisma.ProblemGetPayload<object>;
 
@@ -22,7 +20,6 @@ describe('Problems API (e2e)', () => {
   let server: Parameters<typeof request>[0];
 
   beforeAll(async () => {
-    await prisma.problem.deleteMany();
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
