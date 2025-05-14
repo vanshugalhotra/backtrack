@@ -1,11 +1,17 @@
-import { Module } from '@nestjs/common'; // Import the NestJS Module decorator
-import { ProblemService } from './problem.service'; // Import the service
-import { ProblemController } from './problem.controller'; // Import the controller
-import { PrismaService } from '../prisma/prisma.service'; // Import PrismaService to be injected
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { ProblemService } from './problem.service';
+import { ProblemController } from './problem.controller';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
-  imports: [],
-  controllers: [ProblemController], // Register the controller
-  providers: [ProblemService, PrismaService], // Register the service and Prisma service as providers
+  imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'supersecret', // same secret used in JwtStrategy
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
+  controllers: [ProblemController],
+  providers: [ProblemService, PrismaService],
 })
 export class ProblemModule {}
