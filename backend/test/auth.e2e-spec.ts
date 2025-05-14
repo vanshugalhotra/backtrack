@@ -19,7 +19,7 @@ describe('Auth API (e2e)', () => {
   const testUser = {
     email: 'testuser1@example.com',
     password: 'TestPass123',
-    role: 'USER',
+    role: 'ADMIN',
   };
 
   const testUserLogin = {
@@ -51,6 +51,7 @@ describe('Auth API (e2e)', () => {
     server = app.getHttpServer() as unknown as Parameters<typeof request>[0];
   });
 
+  let token: string;
   it('/api/v1/auth/register (POST) - should register a new user', async () => {
     const res = await request(server)
       .post('/api/v1/auth/register')
@@ -59,6 +60,7 @@ describe('Auth API (e2e)', () => {
     const body = res.body as ApiResponse;
     expect(res.status).toBe(201);
     expect(body.access_token).toBeDefined();
+    token = body.access_token; // Store the token for later use
   });
 
   it('/api/v1/auth/register (POST) - should fail if email already exists', async () => {
@@ -112,6 +114,14 @@ describe('Auth API (e2e)', () => {
     const body = res.body as HttpError;
     expect(res.status).toBe(400);
     expect(body.message).toContain('Invalid credentials');
+  });
+
+  it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
+    const res = await request(server)
+      .delete('/api/v1/clear-db/users')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(200);
   });
 
   afterAll(async () => {
