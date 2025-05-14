@@ -90,7 +90,6 @@ export class AuthService {
       });
     }
   }
-
   private signToken(userId: string, role: string) {
     const payload = { sub: userId, role };
     const token = this.jwtService.sign(payload);

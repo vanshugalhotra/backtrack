@@ -6,14 +6,11 @@ import {
 } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import * as dotenv from 'dotenv';
 import { HttpError } from 'src/common/errors/http-error';
 
 import { Prisma } from '@prisma/client';
 
 type Problem = Prisma.ProblemGetPayload<object>;
-
-dotenv.config({ path: '.env.test' });
 
 describe('Problems API (e2e)', () => {
   let app: INestApplication;
