@@ -10,3 +10,13 @@ export interface Problem {
   createdAt: string; // We'll use string for dates
   updatedAt: string; // We'll use string for dates
 }
+
+export interface ProblemFormData {
+  name: string;
+  slug: string;
+  difficulty: string;
+  points: number;
+  exePath: string;
+  iconPath: string;
+  description: string;
+}

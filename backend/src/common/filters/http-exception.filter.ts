@@ -3,6 +3,7 @@ import { HttpError } from '../errors/http-error';
 import { Response, Request } from 'express';
 import { LoggerService } from '../logger/logger.service';
 
+const isDev = process.env.NODE_ENV !== 'production';
 @Catch(HttpError)
 export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly logger: LoggerService) {}
@@ -26,8 +27,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: message,
-      details: details,
+      message,
+      ...(isDev && details ? { details } : {}),
     });
   }
 }
