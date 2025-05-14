@@ -6,14 +6,11 @@ import {
 } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import * as dotenv from 'dotenv';
 import { HttpError } from 'src/common/errors/http-error';
 
 type ApiResponse = {
   access_token: string;
 };
-
-dotenv.config({ path: '.env.test' });
 
 describe('Auth API (e2e)', () => {
   let app: INestApplication;

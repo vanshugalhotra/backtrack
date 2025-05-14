@@ -6,11 +6,8 @@ import {
 } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import * as dotenv from 'dotenv';
 import { HttpError } from 'src/common/errors/http-error';
 import { ExecutorResponse } from 'src/executor/executor.service';
-
-dotenv.config({ path: '.env.test' });
 
 const isWindows = process.platform === 'win32';
 const binDir = './test-bin';
