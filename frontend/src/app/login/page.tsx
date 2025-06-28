@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import useLogin from "@/hooks/useLogin";
 import { decodeToken } from "@/lib/auth";
 import { useGlobalUI } from "../../../context/GlobalUIContext";
+import Image from "next/image";
 
 export default function LoginPage() {
   const { login } = useLogin();
@@ -31,7 +32,7 @@ export default function LoginPage() {
           const decoded = decodeToken(token);
           router.push(decoded.role === "ADMIN" ? "/admin" : "/");
         } catch {
-          localStorage.removeItem("token"); // corrupted or invalid token
+          localStorage.removeItem("token");
         }
       }
     }
@@ -40,41 +41,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-[#1f2937] p-8 rounded-2xl shadow-lg w-full max-w-sm space-y-5"
-      >
-        <h1 className="text-2xl font-bold text-white text-center">🚀 Login to BackTrack</h1>
+    <div className="relative w-full h-screen">
+      {/* Background Image */}
+      <Image
+        src="/bg.png"
+        alt="Cosmos background"
+        fill
+        priority
+        className="object-cover z-0"
+      />
 
-        <Input
-          type="email"
-          placeholder="Email"
-          className="bg-[#2e2e3e] text-white"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-        <Input
-          type="password"
-          placeholder="Password"
-          className="bg-[#2e2e3e] text-white"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
-        <Button
-          type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
-          disabled={submitting}
+      {/* Login Form */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-black/60 backdrop-blur-xl px-12 py-10 rounded-3xl shadow-2xl w-full max-w-lg space-y-6"
         >
-          {submitting ? "Logging in..." : "Login"}
-        </Button>
-      </form>
+          <div className="text-center">
+            <h1 className="text-4xl font-extrabold text-white mb-3">🌌 BackTrack Portal</h1>
+            <p className="text-gray-300 text-base">Please login to continue</p>
+          </div>
+
+          <Input
+            type="email"
+            placeholder="Email"
+            className="h-14 text-lg bg-[#1e1e2e] text-white border border-gray-600 placeholder-gray-400"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <Input
+            type="password"
+            placeholder="Password"
+            className="h-14 text-lg bg-[#1e1e2e] text-white border border-gray-600 placeholder-gray-400"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          {error && (
+            <p className="text-red-400 text-sm text-center">{error}</p>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full h-14 text-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md transition-all duration-200 cursor-pointer"
+            disabled={submitting}
+          >
+            {submitting ? "Logging in..." : "Login"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
