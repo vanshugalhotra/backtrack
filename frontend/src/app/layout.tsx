@@ -4,6 +4,7 @@ import "./globals.css";
 import { GlobalUIProvider } from "../../context/GlobalUIContext";
 import { ProblemProvider } from "../../context/ProblemContext";
 import { GlobalUIOverlay } from "@/components/chors/GlobalUIOverlay";
+import { AuthProvider } from "../../context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <GlobalUIProvider>
-          <ProblemProvider>
-            <GlobalUIOverlay />
-            {children}
-          </ProblemProvider>
+          <AuthProvider>
+            <ProblemProvider>
+              <GlobalUIOverlay />
+              {children}
+            </ProblemProvider>
+          </AuthProvider>
         </GlobalUIProvider>
       </body>
     </html>

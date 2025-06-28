@@ -10,7 +10,7 @@ const Terminal = dynamic(() => import('@/components/ui/Terminal/Terminal'), {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen w-full bg-[url('/bg/stars.jpg')] bg-cover bg-center flex items-center justify-center p-10">
+    <main className="min-h-screen w-full bg-cover bg-center flex items-center justify-center p-10">
       <div className="flex w-full max-w-[1300px] min-h-[600px] rounded-xl bg-[#0b0f26]/30 border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden">
         {/* Sidebar */}
         <Sidebar />
