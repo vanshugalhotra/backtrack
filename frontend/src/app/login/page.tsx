@@ -8,11 +8,13 @@ import useLogin from "@/hooks/useLogin";
 import { decodeToken } from "@/lib/auth";
 import { useGlobalUI } from "../../../context/GlobalUIContext";
 import Image from "next/image";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function LoginPage() {
   const { login } = useLogin();
   const { error } = useGlobalUI();
   const router = useRouter();
+  const {setUserFromToken} = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,11 +28,11 @@ export default function LoginPage() {
 
     if (success) {
       const token = localStorage.getItem("token");
-
       if (token) {
         try {
+          setUserFromToken(token);
           const decoded = decodeToken(token);
-          router.push(decoded.role === "ADMIN" ? "/admin" : "/");
+          router.push(decoded.role === "ADMIN" ? "/" : "/");
         } catch {
           localStorage.removeItem("token");
         }
