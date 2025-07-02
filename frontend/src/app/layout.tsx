@@ -5,6 +5,7 @@ import { GlobalUIProvider } from "../../context/GlobalUIContext";
 import { ProblemProvider } from "../../context/ProblemContext";
 import { GlobalUIOverlay } from "@/components/chors/GlobalUIOverlay";
 import { AuthProvider } from "../../context/AuthContext";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +36,7 @@ export default function RootLayout({
           <AuthProvider>
             <ProblemProvider>
               <GlobalUIOverlay />
-              {children}
+              <RequireAuth>{children}</RequireAuth>
             </ProblemProvider>
           </AuthProvider>
         </GlobalUIProvider>

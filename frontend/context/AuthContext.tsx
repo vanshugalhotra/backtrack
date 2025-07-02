@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { decodeToken, getToken, logout as clearToken } from '@/lib/auth';
 
-
 interface User {
   sub: string;
   role: 'ADMIN' | 'USER';
@@ -13,6 +12,7 @@ interface AuthContextType {
   user: User | null;
   isLoggedIn: boolean;
   isAdmin: boolean;
+  ready: boolean;              // ✅ new
   logout: () => void;
 }
 
@@ -20,18 +20,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [ready, setReady] = useState(false); // ✅ new
 
   useEffect(() => {
     const token = getToken();
-    if (!token) return;
-
-    try {
-      const decoded = decodeToken(token);
-      setUser({ sub: decoded.sub, role: decoded.role });
-    } catch {
-      clearToken();
-      setUser(null);
+    if (token) {
+      try {
+        const decoded = decodeToken(token);
+        setUser({ sub: decoded.sub, role: decoded.role });
+      } catch {
+        clearToken();
+        setUser(null);
+      }
     }
+    setReady(true); // ✅ mark auth ready
   }, []);
 
   const logout = () => {
@@ -43,7 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const isAdmin = user?.role === 'ADMIN';
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, logout }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, logout, ready }}>
       {children}
     </AuthContext.Provider>
   );

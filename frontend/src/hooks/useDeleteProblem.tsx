@@ -1,3 +1,4 @@
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useGlobalUI } from "../../context/GlobalUIContext"; 
 
 const useDeleteProblem = () => {
@@ -8,7 +9,7 @@ const useDeleteProblem = () => {
     setError(null); // Clear previous errors
 
     try {
-      const response = await fetch(`/api/v1/problems/${slug}`, {
+      const response = await fetchWithAuth(`/api/v1/problems/${slug}`, {
         method: "DELETE",
       });
 

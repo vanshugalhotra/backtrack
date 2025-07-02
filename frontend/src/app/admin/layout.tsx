@@ -13,6 +13,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { GlobalUIOverlay } from "@/components/chors/GlobalUIOverlay";
 import { GlobalUIProvider } from "../../../context/GlobalUIContext";
+import RequireAdmin from "@/components/auth/RequireAdmin";
 
 const adminNavItems = [
   { label: "Dashboard", href: "/admin", icon: LucideLayoutDashboard },
@@ -26,6 +27,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <GlobalUIProvider>
+      <RequireAdmin>
       <div
         className="flex min-h-screen bg-muted"
         style={{
@@ -78,6 +80,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </main>
       </div>
       <GlobalUIOverlay />
+      </RequireAdmin>
     </GlobalUIProvider>
   );
 }
