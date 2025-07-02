@@ -8,7 +8,7 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { HttpError } from 'src/common/errors/http-error';
 
-type ApiResponse = {
+export type ApiResponse = {
   access_token: string;
 };
 
@@ -17,13 +17,13 @@ describe('Auth API (e2e)', () => {
   let server: Parameters<typeof request>[0];
 
   const testUser = {
-    email: 'testuser1@example.com',
+    email: 'testuser@example.com',
     password: 'TestPass123',
     role: 'ADMIN',
   };
 
   const testUserLogin = {
-    email: 'testuser1@example.com',
+    email: 'testuser@example.com',
     password: 'TestPass123',
   };
 

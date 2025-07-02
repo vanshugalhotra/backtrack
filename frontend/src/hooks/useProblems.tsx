@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Problem } from "../../types/problem";
 import { useGlobalUI } from "../../context/GlobalUIContext"; // Import the context
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const useProblems = () => {
   const [problems, setProblems] = useState<Problem[] | null>(null);
@@ -12,7 +13,7 @@ const useProblems = () => {
       setError(null); // Clear previous errors
 
       try {
-        const response = await fetch("/api/v1/problems");
+        const response = await fetchWithAuth("/api/v1/problems");
 
         if (!response.ok) {
           const message = await response.text();

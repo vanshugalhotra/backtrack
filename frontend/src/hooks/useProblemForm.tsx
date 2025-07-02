@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useGlobalUI } from '../../context/GlobalUIContext';
+import { fetchWithAuth } from '@/lib/fetchWithAuth';
 
 export const useProblemForm = () => {
   const { setLoading, setError } = useGlobalUI();
@@ -49,7 +50,7 @@ export const useProblemForm = () => {
         ...formData
       };
 
-      const res = await fetch('/api/v1/problems', {
+      const res = await fetchWithAuth('/api/v1/problems', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
