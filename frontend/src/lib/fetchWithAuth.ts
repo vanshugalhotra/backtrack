@@ -2,8 +2,8 @@ import { getToken } from "@/lib/auth";
 
 // Create mock 401 response if user is not logged in
 function createMockResponse(
-  message = "Please log in to access this resource",
-  status = 401
+  message = "FORBIDDEN: Please log in to access this resource",
+  status = 401,
 ): Response {
   return new Response(JSON.stringify({ statusCode: status, message }), {
     status,

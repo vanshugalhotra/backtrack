@@ -16,8 +16,12 @@ const useProblems = () => {
         const response = await fetchWithAuth("/api/v1/problems");
 
         if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message || "Failed to fetch problems");
+          const error = await response.json();
+          if (error?.message === "FORBIDDEN: Please log in to access this resource") {
+            window.location.href = "/login";
+            return;
+          }
+          throw new Error(error?.message || "Failed to fetch problems");
         }
 
         const data = await response.json();

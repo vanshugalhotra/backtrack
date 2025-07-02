@@ -1,8 +1,8 @@
 "use client";
 
 import Sidebar from "@/components/ui/Sidebar/Sidebar";
-// in app/page.tsx or wherever it's used
 import dynamic from "next/dynamic";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 const Terminal = dynamic(() => import("@/components/ui/Terminal/Terminal"), {
   ssr: false, // disable SSR
@@ -10,6 +10,7 @@ const Terminal = dynamic(() => import("@/components/ui/Terminal/Terminal"), {
 
 export default function HomePage() {
   return (
+    <RequireAuth>
       <main className="min-h-screen w-full bg-cover bg-center flex items-center justify-center p-10">
         <div className="flex w-full max-w-[1300px] min-h-[600px] rounded-xl bg-[#0b0f26]/30 border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden">
           {/* Sidebar */}
@@ -21,5 +22,6 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+    </RequireAuth>
   );
 }
