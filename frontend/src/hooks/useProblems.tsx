@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Problem } from "../../types/problem";
 import { useGlobalUI } from "../../context/GlobalUIContext"; // Import the context
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const useProblems = () => {
   const [problems, setProblems] = useState<Problem[] | null>(null);
@@ -12,11 +13,15 @@ const useProblems = () => {
       setError(null); // Clear previous errors
 
       try {
-        const response = await fetch("/api/v1/problems");
+        const response = await fetchWithAuth("/api/v1/problems");
 
         if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message || "Failed to fetch problems");
+          const error = await response.json();
+          if (error?.message === "FORBIDDEN: Please log in to access this resource") {
+            window.location.href = "/login";
+            return;
+          }
+          throw new Error(error?.message || "Failed to fetch problems");
         }
 
         const data = await response.json();

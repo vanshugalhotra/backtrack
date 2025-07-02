@@ -11,10 +11,19 @@ import { HttpError } from 'src/common/errors/http-error';
 import { Prisma } from '@prisma/client';
 
 type Problem = Prisma.ProblemGetPayload<object>;
+type ApiResponse = {
+  access_token: string;
+};
 
 describe('Problems API (e2e)', () => {
   let app: INestApplication;
   let server: Parameters<typeof request>[0];
+
+  const testUser = {
+    email: 'testuser_p@example.com',
+    password: 'TestPass123',
+    role: 'ADMIN',
+  };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -41,8 +50,22 @@ describe('Problems API (e2e)', () => {
     server = app.getHttpServer() as unknown as Parameters<typeof request>[0];
   });
 
+  let token: string;
+  it('/api/v1/auth/register (POST) - should register a new user', async () => {
+    const res = await request(server)
+      .post('/api/v1/auth/register')
+      .send(testUser);
+
+    const body = res.body as ApiResponse;
+    expect(res.status).toBe(201);
+    expect(body.access_token).toBeDefined();
+    token = body.access_token; // Store the token for later use
+  });
+
   it('/api/v1/problems (GET) - should return list', async () => {
-    const res: request.Response = await request(server).get('/api/v1/problems');
+    const res: request.Response = await request(server)
+      .get('/api/v1/problems')
+      .set('Authorization', `Bearer ${token}`);
     const body = res.body as Problem;
     expect(res.status).toBe(200);
     expect(Array.isArray(body)).toBe(true);
@@ -61,6 +84,7 @@ describe('Problems API (e2e)', () => {
 
     const res: request.Response = await request(server)
       .post('/api/v1/problems')
+      .set('Authorization', `Bearer ${token}`)
       .send(newProblem);
     const body = res.body as Problem;
     expect(res.status).toBe(201);
@@ -68,18 +92,18 @@ describe('Problems API (e2e)', () => {
   });
 
   it('/api/v1/problems/:slug (GET) - should return problem', async () => {
-    const res: request.Response = await request(server).get(
-      '/api/v1/problems/test-problem',
-    );
+    const res: request.Response = await request(server)
+      .get('/api/v1/problems/test-problem')
+      .set('Authorization', `Bearer ${token}`);
     const body = res.body as Problem;
     expect(res.status).toBe(200);
     expect(body.name).toBe('Test Problem');
   });
 
   it('/api/v1/problems/:slug (DELETE) - should delete problem', async () => {
-    const res: request.Response = await request(server).delete(
-      '/api/v1/problems/test-problem',
-    );
+    const res: request.Response = await request(server)
+      .delete('/api/v1/problems/test-problem')
+      .set('Authorization', `Bearer ${token}`);
     const body = res.body as Problem;
     expect(res.status).toBe(200);
     expect(body.slug).toBe('test-problem');
@@ -97,6 +121,7 @@ describe('Problems API (e2e)', () => {
 
     const res: request.Response = await request(server)
       .post('/api/v1/problems')
+      .set('Authorization', `Bearer ${token}`)
       .send(invalidProblem);
 
     const body = res.body as HttpError;
@@ -117,6 +142,7 @@ describe('Problems API (e2e)', () => {
 
     const res: request.Response = await request(server)
       .post('/api/v1/problems')
+      .set('Authorization', `Bearer ${token}`)
       .send(invalidProblem);
 
     const body = res.body as HttpError;
@@ -127,27 +153,27 @@ describe('Problems API (e2e)', () => {
   });
 
   it('/api/v1/problems/:slug (GET) - should return 404 for non-existent problem', async () => {
-    const res: request.Response = await request(server).get(
-      '/api/v1/problems/invalid-slug',
-    );
+    const res: request.Response = await request(server)
+      .get('/api/v1/problems/invalid-slug')
+      .set('Authorization', `Bearer ${token}`);
     const body = res.body as HttpError;
     expect(res.status).toBe(404);
     expect(body.message).toBe('Problem with slug "invalid-slug" not found');
   });
 
   it('/api/v1/problems/:slug (DELETE) - should return 404 for non-existent problem', async () => {
-    const res: request.Response = await request(server).delete(
-      '/api/v1/problems/invalid-slug',
-    );
+    const res: request.Response = await request(server)
+      .delete('/api/v1/problems/invalid-slug')
+      .set('Authorization', `Bearer ${token}`);
     const body = res.body as HttpError;
     expect(res.status).toBe(404);
     expect(body.message).toBe('Problem with slug "invalid-slug" not found');
   });
 
   it('/api/v1/problems/:slug (GET) - should return 404 for invalid slug format', async () => {
-    const res: request.Response = await request(server).get(
-      '/api/v1/problems/invalid#slug',
-    );
+    const res: request.Response = await request(server)
+      .get('/api/v1/problems/invalid#slug')
+      .set('Authorization', `Bearer ${token}`);
     const body = res.body as HttpError;
     expect(res.status).toBe(404);
     expect(body.message).toBe('Problem with slug "invalid" not found');
@@ -166,10 +192,18 @@ describe('Problems API (e2e)', () => {
 
     const res: request.Response = await request(server)
       .post('/api/v1/problems')
+      .set('Authorization', `Bearer ${token}`)
       .send(invalidSlugProblem);
     const body = res.body as HttpError;
     expect(res.status).toBe(400);
     expect(body.message).toContain('Slug must be lowercase, kebab-case');
+  });
+
+  it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
+    const res = await request(server)
+      .delete('/api/v1/clear-db/users')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
   });
 
   afterAll(async () => {
