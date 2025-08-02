@@ -34,18 +34,18 @@ export class TestService {
 
     let connectProblems: { id: number }[] = [];
 
-    if (dto.problemSlugs && dto.problemSlugs.length > 0) {
+    if (dto.problems && dto.problems.length > 0) {
       const foundProblems = await this.prisma.problem.findMany({
         where: {
           slug: {
-            in: dto.problemSlugs,
+            in: dto.problems,
           },
         },
       });
 
-      if (foundProblems.length !== dto.problemSlugs.length) {
+      if (foundProblems.length !== dto.problems.length) {
         const foundSlugs = foundProblems.map((p) => p.slug);
-        const missing = dto.problemSlugs.filter((s) => !foundSlugs.includes(s));
+        const missing = dto.problems.filter((s) => !foundSlugs.includes(s));
         this.logger.error(`Problems not found: ${missing.join(', ')}`);
         throw new BadRequestException(
           `Problems not found: ${missing.join(', ')}`,

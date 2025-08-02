@@ -28,5 +28,5 @@ export class CreateTestDto {
   @IsArray()
   @ArrayNotEmpty()
   @IsString({ each: true })
-  problemSlugs?: string[];
+  problems?: string[];
 }

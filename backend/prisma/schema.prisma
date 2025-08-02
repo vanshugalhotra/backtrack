@@ -16,11 +16,11 @@ model Problem {
   points      Int
   exePath     String // path to .exe file on disk or in container
   description String // markdown or HTML
-  test        Test?      @relation("TestProblems", fields: [testId], references: [id])
-  testId      Int?
   iconPath    String? // optional path to the icon file (could be a URL or file path)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  tests       Test[]     @relation("TestProblems")
 }
 
 // Enum for difficulty levels
@@ -51,7 +51,7 @@ model Test {
   description String?
   password    String // plain-text or minimally hashed
   hasStarted  Boolean   @default(false)
-  problems    Problem[] @relation("TestProblems")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  problems    Problem[] @relation("TestProblems")
 }
