@@ -13,7 +13,15 @@ export class ClearDbService {
     await this.prisma.problem.deleteMany({});
   }
 
+  async clearTests() {
+    await this.prisma.test.deleteMany({});
+  }
+
   async clearAll() {
-    await Promise.all([this.clearUsers(), this.clearProblems()]);
+    await Promise.all([
+      this.clearUsers(),
+      this.clearProblems(),
+      this.clearTests(),
+    ]);
   }
 }

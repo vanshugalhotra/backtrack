@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsOptional,
-  IsArray,
-  ArrayNotEmpty,
-  IsBoolean,
-} from 'class-validator';
+import { IsString, IsOptional, IsArray, IsBoolean } from 'class-validator';
 
 export class CreateTestDto {
   @IsString()
@@ -26,7 +20,6 @@ export class CreateTestDto {
 
   @IsOptional()
   @IsArray()
-  @ArrayNotEmpty()
   @IsString({ each: true })
   problems?: string[];
 }

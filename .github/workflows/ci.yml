@@ -123,7 +123,7 @@ jobs:
       - name: Run backend Tests
         run: |
           cd backend
-          npm run test:e2e
+          npm run test:e2e:serial
 
       - name: Build backend
         run: |
