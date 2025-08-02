@@ -5,6 +5,7 @@ import { ExecutorModule } from './executor/executor.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { AuthModule } from './auth/auth.module';
 import { ClearDbModule } from './clear-db/clear-db.module';
+import { TestModule } from './test/test.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ClearDbModule } from './clear-db/clear-db.module';
     FileUploadModule,
     AuthModule,
     ClearDbModule,
+    TestModule,
   ],
   controllers: [],
   providers: [],
