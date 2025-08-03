@@ -6,6 +6,7 @@ import {
   UseGuards,
   Get,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { TestService } from './test.service';
 import { CreateTestDto } from './dto/create-test.dto';
@@ -49,5 +50,12 @@ export class TestController {
   ): Promise<{ message: string }> {
     await this.testService.startTest(slug, password);
     return { message: 'Test started successfully' };
+  }
+
+  @Delete(':slug')
+  @Roles('ADMIN')
+  @Version('1')
+  async deleteTest(@Param('slug') slug: string) {
+    return this.testService.deleteTest(slug);
   }
 }

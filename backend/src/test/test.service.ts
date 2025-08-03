@@ -124,4 +124,16 @@ export class TestService {
       data: { hasStarted: true },
     });
   }
+
+  async deleteTest(slug: string) {
+    const test = await this.prisma.test.findUnique({ where: { slug } });
+
+    if (!test) {
+      throw new NotFoundException(`Test with slug "${slug}" not found.`);
+    }
+
+    await this.prisma.test.delete({ where: { slug } });
+
+    return { message: `Test "${slug}" deleted successfully.` };
+  }
 }

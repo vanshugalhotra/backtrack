@@ -192,6 +192,24 @@ describe('Tests API (e2e)', () => {
     expect(body.message).toContain('Test has already started');
   });
 
+  it('/api/v1/tests/:slug (DELETE) - should delete an existing test', async () => {
+    const res = await request(server)
+      .delete('/api/v1/tests/sample-test') // use existing slug
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+  });
+
+  it('/api/v1/tests/:slug (DELETE) - should return 404 for unknown slug', async () => {
+    const res = await request(server)
+      .delete('/api/v1/tests/non-existent-slug')
+      .set('Authorization', `Bearer ${token}`);
+
+    const body = res.body as HttpError;
+    expect(res.status).toBe(404);
+    expect(body.message).toContain('not found');
+  });
+
   // -------------------------------------------------------------------------------------------
   it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
     const res = await request(server)
