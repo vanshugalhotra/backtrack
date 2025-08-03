@@ -1,8 +1,16 @@
-import { Controller, Post, Body, Version, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Version,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { TestService } from './test.service';
 import { CreateTestDto } from './dto/create-test.dto';
 import { JwtAuthGuard } from 'src/auth/gaurd/jwt-auth.gaurd';
 import { RolesGuard } from 'src/auth/gaurd/roles.gaurd';
+import { Test } from '@prisma/client';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('tests')
@@ -15,5 +23,12 @@ export class TestController {
   @Version('1')
   createTest(@Body() dto: CreateTestDto) {
     return this.testService.createTest(dto);
+  }
+
+  @Get()
+  @Roles('USER', 'ADMIN')
+  @Version('1')
+  async getAllTests(): Promise<Test[]> {
+    return this.testService.getAllTests();
   }
 }

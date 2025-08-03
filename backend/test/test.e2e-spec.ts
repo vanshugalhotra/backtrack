@@ -130,6 +130,15 @@ describe('Tests API (e2e)', () => {
     expect(body.message).toContain('Problems not found: not-found');
   });
 
+  it('/api/v1/tests (GET) - should return list of tests', async () => {
+    const res = await request(server)
+      .get('/api/v1/tests')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
   it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
     const res = await request(server)
       .delete('/api/v1/clear-db/users')

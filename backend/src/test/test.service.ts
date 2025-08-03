@@ -76,4 +76,11 @@ export class TestService {
     );
     return newTest;
   }
+
+  async getAllTests() {
+    this.logger.log('Fetching all tests');
+    const tests = await this.prisma.test.findMany({});
+    this.logger.log(`Found ${tests.length} tests`);
+    return tests;
+  }
 }
