@@ -39,4 +39,15 @@ export class TestController {
   async getTestBySlug(@Param('slug') slug: string): Promise<Test> {
     return this.testService.getTestBySlug(slug);
   }
+
+  @Post(':slug/start')
+  @Roles('ADMIN')
+  @Version('1')
+  async startTest(
+    @Param('slug') slug: string,
+    @Body('password') password: string,
+  ): Promise<{ message: string }> {
+    await this.testService.startTest(slug, password);
+    return { message: 'Test started successfully' };
+  }
 }

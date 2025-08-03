@@ -154,6 +154,45 @@ describe('Tests API (e2e)', () => {
 
     expect(res.status).toBe(404);
   });
+  it('/api/v1/tests/:slug/start (POST) - should start a test', async () => {
+    const data = {
+      password: 'securepass123',
+    };
+
+    const res = await request(server)
+      .post('/api/v1/tests/sample-test/start')
+      .set('Authorization', `Bearer ${token}`)
+      .send(data);
+
+    expect(res.status).toBe(201);
+  });
+  it('/api/v1/tests/:slug/start (POST) - should say invalid password', async () => {
+    const data = {
+      password: 'invalidpass',
+    };
+
+    const res = await request(server)
+      .post('/api/v1/tests/sample-test/start')
+      .set('Authorization', `Bearer ${token}`)
+      .send(data);
+
+    expect(res.status).toBe(403);
+  });
+  it('/api/v1/tests/:slug/start (POST) - should say test has already started', async () => {
+    const data = {
+      password: 'securepass123',
+    };
+
+    const res = await request(server)
+      .post('/api/v1/tests/sample-test/start')
+      .set('Authorization', `Bearer ${token}`)
+      .send(data);
+    const body = res.body as HttpError;
+    expect(res.status).toBe(400);
+    expect(body.message).toContain('Test has already started');
+  });
+
+  // -------------------------------------------------------------------------------------------
   it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
     const res = await request(server)
       .delete('/api/v1/clear-db/users')

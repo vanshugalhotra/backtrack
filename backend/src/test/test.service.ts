@@ -7,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTestDto } from './dto/create-test.dto';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { Prisma } from '@prisma/client';
+import { PermissionDeniedError } from 'src/common/errors/http-error';
 
 type Test = Prisma.TestGetPayload<{
   include: {
@@ -99,5 +100,28 @@ export class TestService {
     }
 
     return test;
+  }
+
+  async startTest(slug: string, password: string): Promise<void> {
+    const test = await this.prisma.test.findUnique({
+      where: { slug },
+    });
+
+    if (!test) {
+      throw new BadRequestException(`Test not found: ${slug}`);
+    }
+
+    if (test.password !== password) {
+      throw new PermissionDeniedError('Invalid password');
+    }
+
+    if (test.hasStarted) {
+      throw new BadRequestException('Test has already started');
+    }
+
+    await this.prisma.test.update({
+      where: { slug },
+      data: { hasStarted: true },
+    });
   }
 }
