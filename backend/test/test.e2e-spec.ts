@@ -138,7 +138,22 @@ describe('Tests API (e2e)', () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
+  it('/api/v1/tests/:slug (GET) - should return test by slug', async () => {
+    const res = await request(server)
+      .get('/api/v1/tests/sample-test')
+      .set('Authorization', `Bearer ${token}`);
 
+    const body = res.body as TestType;
+    expect(res.status).toBe(200);
+    expect(body.slug).toBe('sample-test');
+  });
+  it('/api/v1/tests/:slug (GET) - invalid slug', async () => {
+    const res = await request(server)
+      .get('/api/v1/tests/invalid-slug')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(404);
+  });
   it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
     const res = await request(server)
       .delete('/api/v1/clear-db/users')

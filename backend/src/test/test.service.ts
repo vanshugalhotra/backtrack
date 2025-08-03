@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTestDto } from './dto/create-test.dto';
 import { LoggerService } from 'src/common/logger/logger.service';
@@ -82,5 +86,18 @@ export class TestService {
     const tests = await this.prisma.test.findMany({});
     this.logger.log(`Found ${tests.length} tests`);
     return tests;
+  }
+
+  async getTestBySlug(slug: string): Promise<Test> {
+    const test = await this.prisma.test.findUnique({
+      where: { slug },
+      include: { problems: true },
+    });
+
+    if (!test) {
+      throw new NotFoundException(`Test with slug "${slug}" not found`);
+    }
+
+    return test;
   }
 }

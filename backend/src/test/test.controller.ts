@@ -5,6 +5,7 @@ import {
   Version,
   UseGuards,
   Get,
+  Param,
 } from '@nestjs/common';
 import { TestService } from './test.service';
 import { CreateTestDto } from './dto/create-test.dto';
@@ -30,5 +31,12 @@ export class TestController {
   @Version('1')
   async getAllTests(): Promise<Test[]> {
     return this.testService.getAllTests();
+  }
+
+  @Get(':slug')
+  @Roles('USER', 'ADMIN')
+  @Version('1')
+  async getTestBySlug(@Param('slug') slug: string): Promise<Test> {
+    return this.testService.getTestBySlug(slug);
   }
 }
