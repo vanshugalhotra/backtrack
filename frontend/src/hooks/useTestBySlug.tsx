@@ -1,24 +1,36 @@
+// useTestBySlug.ts
+"use client";
+
 import { useEffect, useState } from "react";
 import { TestDetail } from "../../types/test";
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
-import { useParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 
 const useTestBySlug = () => {
   const [test, setTest] = useState<TestDetail | null>(null);
   const { setLoading, setError } = useGlobalUI();
-  const params = useParams();
+
+  const params = useParams(); // for slug
+  const searchParams = useSearchParams(); // for ?password=xxx
 
   useEffect(() => {
     const fetchTest = async () => {
       const slug = params?.slug;
+      const password = searchParams?.get("password");
+
       if (!slug || Array.isArray(slug)) return;
 
       setLoading(true);
       setError(null);
 
       try {
-        const response = await fetchWithAuth(`/api/v1/tests/${slug}`);
+        const url = password
+          ? `/api/v1/tests/${slug}?password=${encodeURIComponent(password)}`
+          : `/api/v1/tests/${slug}`;
+
+        const response = await fetchWithAuth(url);
+
         if (!response.ok) {
           const error = await response.json();
           if (error?.message?.includes("FORBIDDEN")) {
@@ -42,7 +54,7 @@ const useTestBySlug = () => {
     };
 
     fetchTest();
-  }, [params?.slug, setLoading, setError]);
+  }, [params?.slug, searchParams, setLoading, setError]);
 
   return { test };
 };

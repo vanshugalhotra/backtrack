@@ -64,7 +64,7 @@ describe('Tests API (e2e)', () => {
       name: 'Sample Test',
       slug: 'sample-test',
       description: 'A mock test with no problems.',
-      password: 'securepass123',
+      password: 'letmein',
     };
 
     const res = await request(server)
@@ -138,15 +138,26 @@ describe('Tests API (e2e)', () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
-  it('/api/v1/tests/:slug (GET) - should return test by slug', async () => {
+  it('/api/v1/tests/:slug (GET) - should return test by slug with correct password', async () => {
     const res = await request(server)
       .get('/api/v1/tests/sample-test')
+      .query({ password: 'letmein' })
       .set('Authorization', `Bearer ${token}`);
 
     const body = res.body as TestType;
     expect(res.status).toBe(200);
     expect(body.slug).toBe('sample-test');
   });
+
+  it('/api/v1/tests/:slug (GET) - should fail with wrong password', async () => {
+    const res = await request(server)
+      .get('/api/v1/tests/sample-test')
+      .query({ password: 'wrongpass' })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(403);
+  });
+
   it('/api/v1/tests/:slug (GET) - invalid slug', async () => {
     const res = await request(server)
       .get('/api/v1/tests/invalid-slug')
@@ -156,7 +167,7 @@ describe('Tests API (e2e)', () => {
   });
   it('/api/v1/tests/:slug/start (POST) - should start a test', async () => {
     const data = {
-      password: 'securepass123',
+      password: 'letmein',
     };
 
     const res = await request(server)
@@ -180,7 +191,7 @@ describe('Tests API (e2e)', () => {
   });
   it('/api/v1/tests/:slug/start (POST) - should say test has already started', async () => {
     const data = {
-      password: 'securepass123',
+      password: 'letmein',
     };
 
     const res = await request(server)

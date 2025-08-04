@@ -58,7 +58,9 @@ export default function HomePage() {
           onClose={() => setIsModalOpen(false)}
           onSubmit={(enteredPassword) => {
             if (enteredPassword === selectedTest?.password) {
-              window.location.href = `/tests/${selectedTest.slug}`;
+              window.location.href = `/tests/${
+                selectedTest.slug
+              }?password=${encodeURIComponent(enteredPassword)}`;
             } else {
               toast.error(`Incorrect password`);
             }
