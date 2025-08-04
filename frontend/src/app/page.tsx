@@ -1,26 +1,70 @@
 "use client";
 
-import Sidebar from "@/components/ui/Sidebar/Sidebar";
-import dynamic from "next/dynamic";
+import React, { useRef, useState } from "react";
+import useTests from "@/hooks/useTests";
+import TestCard from "@/components/ui/TestCard";
 import RequireAuth from "@/components/auth/RequireAuth";
-
-const Terminal = dynamic(() => import("@/components/ui/Terminal/Terminal"), {
-  ssr: false, // disable SSR
-});
+import PasswordModal from "@/components/ui/Modal/PasswordModal";
+import { useStarfield } from "@/hooks/useStarField";
+import { toast } from "sonner";
 
 export default function HomePage() {
+  const { tests } = useTests();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const [selectedTest, setSelectedTest] = useState<null | {
+    slug: string;
+    password: string;
+  }>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useStarfield(canvasRef);
+
   return (
     <RequireAuth>
-      <main className="min-h-screen w-full bg-cover bg-center flex items-center justify-center p-10">
-        <div className="flex w-full max-w-[1300px] min-h-[600px] rounded-xl bg-[#0b0f26]/30 border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden">
-          {/* Sidebar */}
-          <Sidebar />
+      <main className="relative min-h-screen w-full flex flex-col items-center justify-start px-6 py-16 text-white overflow-hidden">
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-0 w-full h-full"
+        />
 
-          {/* Terminal Panel */}
-          <div className="flex-1 p-6 bg-[#0b0f26]/90 border-l border-white/10 text-white font-mono">
-            <Terminal />
-          </div>
+        <div className="relative z-10 text-center space-y-2 mb-10">
+          <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight text-white">
+            INFOTREK<span className="text-cyan-400">&apos;25</span>
+          </h1>
+          <p className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-white tracking-wide">
+            BackTrack
+          </p>
         </div>
+
+        <section className="relative z-10 w-full max-w-[1300px] px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tests?.map((test) => (
+              <TestCard
+                key={test.slug}
+                name={test.name}
+                description={test.description ?? ""}
+                image="/test.jpg"
+                onClick={() => {
+                  setSelectedTest({ slug: test.slug, password: test.password });
+                  setIsModalOpen(true);
+                }}
+              />
+            ))}
+          </div>
+        </section>
+        <PasswordModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={(enteredPassword) => {
+            if (enteredPassword === selectedTest?.password) {
+              window.location.href = `/tests/${selectedTest.slug}`;
+            } else {
+              toast.error(`Incorrect password`);
+            }
+            setIsModalOpen(false);
+          }}
+        />
       </main>
     </RequireAuth>
   );

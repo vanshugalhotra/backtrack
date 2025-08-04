@@ -5,6 +5,7 @@ import { GlobalUIProvider } from "../../context/GlobalUIContext";
 import { ProblemProvider } from "../../context/ProblemContext";
 import { GlobalUIOverlay } from "@/components/chors/GlobalUIOverlay";
 import { AuthProvider } from "../../context/AuthContext";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
             <ProblemProvider>
               <GlobalUIOverlay />
               {children}
+              <Toaster richColors position="top-center" expand closeButton={true} />
             </ProblemProvider>
           </AuthProvider>
         </GlobalUIProvider>
