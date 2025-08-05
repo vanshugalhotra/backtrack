@@ -31,7 +31,6 @@ const TestCard: React.FC<TestCardProps> = ({
           fill
           className="object-cover transition duration-300 group-hover:scale-[1.015]"
         />
-        <div className="absolute inset-0 bg-black/30" />
         <div className="absolute top-3 right-3">
           <Lock size={20} className="text-cyan-300" />
         </div>

@@ -171,7 +171,7 @@ const TestsForm: React.FC<TestsFormProps> = ({ mode, onSubmit }) => {
           <div className="col-span-full">
             <Button
               type="submit"
-              className="w-full flex items-center justify-center gap-3 py-3 text-lg font-semibold text-white bg-gray-800 hover:bg-gray-900 transition-all duration-300 rounded-md shadow-md ring-2 ring-gray-500/30"
+              className="w-full flex items-center justify-center gap-3 py-3 text-lg font-semibold text-white bg-gray-800 hover:bg-gray-900 transition-all duration-300 rounded-md shadow-md ring-2 ring-gray-500/30 cursor-pointer"
             >
               {mode === "add" ? "Create Test" : "Update Test"}
             </Button>

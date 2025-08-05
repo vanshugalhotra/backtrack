@@ -7,14 +7,16 @@ type DeleteModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  problemSlug: string;
+  slug: string;
+  type?: "problem" | "test";
 };
 
 export default function DeleteModal({
   isOpen,
   onClose,
   onConfirm,
-  problemSlug,
+  slug,
+  type
 }: DeleteModalProps) {
   if (!isOpen) return null;
 
@@ -23,7 +25,7 @@ export default function DeleteModal({
       <div className="bg-white rounded-xl shadow-lg max-w-lg w-full p-8 space-y-6">
         <h3 className="text-2xl font-semibold text-gray-800">Confirm Deletion</h3>
         <p className="text-lg text-gray-600">
-          Are you sure you want to delete the problem <span className="font-bold text-gray-900">&quot;{problemSlug}&quot;</span>? This action cannot be undone.
+          Are you sure you want to delete the {type} <span className="font-bold text-gray-900">&quot;{slug}&quot;</span>? This action cannot be undone.
         </p>
         <div className="mt-6 flex justify-end space-x-6">
           <Button
