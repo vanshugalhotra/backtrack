@@ -23,7 +23,7 @@ const TestCardAdmin: React.FC<TestCardAdminProps> = ({
   hasStarted,
 }) => {
   return (
-    <Card className="group relative w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-[#0b0f26]/80 backdrop-blur-md shadow-md hover:shadow-cyan-500/10 transition">
+    <Card className="group relative w-full max-w-md overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#0b0f26]/80 to-[#111831]/90 backdrop-blur-lg shadow-md hover:shadow-cyan-500/20 transition duration-300">
       {/* Banner */}
       <div className="relative h-56 w-full">
         <Image
@@ -37,16 +37,16 @@ const TestCardAdmin: React.FC<TestCardAdminProps> = ({
       {/* Content */}
       <CardContent className="px-6 py-5 text-white space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-semibold tracking-tight group-hover:text-cyan-400 transition-colors">
+          <h3 className="text-lg font-semibold group-hover:text-cyan-400 transition-colors">
             {name}
           </h3>
           <Badge
-            className={`text-xs px-2 py-1 rounded-full border font-medium ${
+            variant="outline"
+            className={`text-xs px-2 py-1 rounded-full font-medium tracking-tight ${
               hasStarted
                 ? "border-green-500 text-green-400"
                 : "border-yellow-500 text-yellow-400"
             }`}
-            variant="outline"
           >
             {hasStarted ? "Started" : "Not Started"}
           </Badge>
@@ -56,16 +56,16 @@ const TestCardAdmin: React.FC<TestCardAdminProps> = ({
           {description || "No description provided."}
         </p>
 
-        <div className="flex justify-between gap-3 pt-3">
+        <div className="flex justify-between gap-3 pt-4">
           <Button
             onClick={(e) => {
               e.stopPropagation();
               if (!hasStarted) onStart();
             }}
             disabled={hasStarted}
-            className={`rounded-md cursor-pointer px-4 py-2 text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200 ${
               hasStarted
-                ? "bg-gray-600 text-white cursor-not-allowed"
+                ? "bg-gray-600 text-white/80 cursor-not-allowed"
                 : "bg-green-600 hover:bg-green-700 text-white"
             }`}
           >
@@ -77,7 +77,7 @@ const TestCardAdmin: React.FC<TestCardAdminProps> = ({
               e.stopPropagation();
               onDelete();
             }}
-            className="bg-red-600 hover:bg-red-700 cursor-pointer text-white rounded-md px-4 py-2 text-sm font-medium"
+            className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200"
           >
             Delete
           </Button>

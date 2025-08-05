@@ -8,7 +8,6 @@ import {
   LucideLayoutDashboard,
   LucidePlusCircle,
   LucideList,
-  LucideSettings,
   LucideClipboardList,
   LucideClipboardPlus,
 } from "lucide-react";
@@ -23,7 +22,6 @@ const adminNavItems = [
   { label: "Problems", href: "/admin/problems", icon: LucideList },
   { label: "Add Test", href: "/admin/tests/add", icon: LucideClipboardPlus },
   { label: "Tests", href: "/admin/tests", icon: LucideClipboardList },
-  { label: "Settings", href: "/admin/settings", icon: LucideSettings },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -33,7 +31,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <GlobalUIProvider>
       <RequireAdmin>
         <div
-          className="flex min-h-screen bg-muted"
+          className="flex min-h-screen bg-zinc-950 text-white"
           style={{
             backgroundImage: "url('/bg.png')",
             backgroundSize: "cover",
@@ -41,9 +39,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             backgroundAttachment: "fixed",
           }}
         >
-          {/* Sidebar */}
-          <aside className="w-72 min-h-screen bg-gradient-to-b from-gray-950 to-gray-800 text-white flex flex-col px-6 py-8 border-r border-gray-700 rounded-l-xl shadow-xl">
-            <h1 className="text-3xl font-bold text-white tracking-tight mb-10">
+          <aside className="w-72 min-h-screen bg-gradient-to-b from-[#0d1117] to-[#161b22] text-white flex flex-col px-6 py-8 border-r border-white/10 shadow-xl backdrop-blur-2xl">
+            <h1 className="text-4xl font-extrabold tracking-tight mb-12 text-center bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               BACKTRACK ADMIN
             </h1>
 
@@ -57,28 +54,27 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-4 p-4 rounded-lg transition-all duration-200 ease-in-out text-lg font-medium",
+                      "group flex items-center gap-5 px-5 py-4 rounded-xl text-base font-semibold transition-all duration-200",
                       isActive
-                        ? "bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg transform scale-105"
-                        : "text-gray-300 hover:text-white hover:bg-gray-700 hover:scale-105"
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md scale-105"
+                        : "text-white/70 hover:text-white hover:bg-white/10 hover:scale-105"
                     )}
                   >
-                    <Icon className="w-6 h-6 transition-all duration-200 ease-in-out" />
-                    <span className="font-semibold">{item.label}</span>
+                    <Icon className="w-6 h-6 group-hover:scale-110 transition-transform duration-150" />
+                    <span className="tracking-wide">{item.label}</span>
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Optional Footer */}
-            <div className="mt-auto pt-12 text-xs text-gray-400 text-center">
-              <p>
+            <div className="mt-auto pt-16 text-xs text-white/30 text-center border-t border-white/10">
+              <p className="mt-4">
                 &copy; {new Date().getFullYear()} InfoTrek. All rights reserved.
               </p>
             </div>
           </aside>
-          {/* Main content */}
-          <main className="flex-1 p-6 overflow-auto z-10">
+
+          <main className="flex-1 p-8 overflow-auto bg-zinc-950/60">
             {children}
             <Toaster
               richColors

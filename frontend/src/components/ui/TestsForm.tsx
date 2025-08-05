@@ -112,11 +112,12 @@ const TestsForm: React.FC<TestsFormProps> = ({ mode, onSubmit }) => {
               required
             />
           </div>
-
           {/* Select Problems */}
           <div className="space-y-2 col-span-full">
-            <Label className="text-base font-semibold">Select Problems</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-72 overflow-y-auto">
+            <Label className="text-base font-semibold">
+              Select Problems
+            </Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-72 overflow-y-auto p-2">
               {problems?.map((problem) => {
                 const difficultyColor = {
                   EASY: "text-green-500 border-green-300",
@@ -124,20 +125,22 @@ const TestsForm: React.FC<TestsFormProps> = ({ mode, onSubmit }) => {
                   HARD: "text-red-600 border-red-400",
                 };
 
+                const isSelected = selectedProblems.includes(problem.id);
+
                 return (
                   <label
                     key={problem.id}
-                    className={`relative flex flex-col gap-1 bg-white p-4 rounded-lg shadow-sm border-2 ${
-                      selectedProblems.includes(problem.id)
-                        ? "border-cyan-500 ring-2 ring-cyan-200"
-                        : "border-gray-200"
-                    } cursor-pointer transition-all`}
+                    className={`relative flex flex-col gap-1 bg-white p-4 rounded-lg shadow-sm border-2 transition-all duration-150 ${
+                      isSelected
+                        ? "border-cyan-500 ring-2 ring-cyan-200 -translate-y-0.5"
+                        : "border-gray-200 hover:border-gray-300 hover:shadow-sm"
+                    } cursor-pointer`}
                   >
                     <input
                       type="checkbox"
-                      checked={selectedProblems.includes(problem.id)}
+                      checked={isSelected}
                       onChange={() => handleToggleProblem(problem.id)}
-                      className="absolute top-3 right-3 w-4 h-4 text-cyan-600 accent-cyan-600"
+                      className="absolute top-3 right-3 w-4 h-4 text-cyan-600 accent-cyan-600 hidden"
                     />
 
                     {/* Header: Title and Difficulty */}

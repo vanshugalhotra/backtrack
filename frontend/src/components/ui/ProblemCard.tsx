@@ -23,69 +23,68 @@ export default function ProblemCard({ problem, onDelete }: ProblemCardProps) {
   return (
     <Card
       key={problem.slug}
-      className="bg-gradient-to-br from-gray-900/80 to-black border border-gray-700 rounded-2xl shadow-lg hover:shadow-indigo-700/40 transition-transform duration-300 hover:scale-[1.03]"
+      className="w-full max-w-md rounded-xl border border-white/10 bg-zinc-900/80 backdrop-blur-md shadow-md hover:shadow-lg transition-transform hover:scale-[1.01]"
     >
-      <CardHeader>
-        <CardTitle className="text-2xl font-semibold text-white tracking-wide hover:text-indigo-400 transition-colors duration-200">
-          {problem.name}
-        </CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between px-6 pt-6 pb-2">
+        <div>
+          <CardTitle className="text-xl font-semibold text-white">
+            {problem.name}
+          </CardTitle>
+          <div className="mt-1 text-xs text-gray-400">
+            {format(new Date(problem.createdAt), "MMM dd, yyyy")}
+          </div>
+        </div>
+        {problem.iconPath && (
+          <Image
+            src={`/icons/${problem.iconPath}`}
+            alt={problem.name}
+            width={48}
+            height={48}
+            className="rounded-md border border-white/10 bg-white/5 p-1"
+          />
+        )}
       </CardHeader>
-      <CardContent className="p-6 space-y-4">
-        <div className="flex justify-between items-center">
+
+      <CardContent className="px-6 pb-6 pt-2 space-y-5">
+        <div className="flex items-center justify-between text-sm">
           <span
-            className={`text-sm font-medium ${
+            className={`px-2 py-0.5 rounded text-xs font-semibold border ${
               problem.difficulty === "EASY"
-                ? "text-green-400"
+                ? "text-green-400 border-green-400/40"
                 : problem.difficulty === "MEDIUM"
-                ? "text-yellow-400"
-                : "text-red-400"
+                ? "text-yellow-400 border-yellow-400/40"
+                : "text-red-400 border-red-400/40"
             }`}
           >
             {problem.difficulty}
           </span>
-          <span className="text-sm text-gray-400">
-            Points: {problem.points}
-          </span>
+          <span className="text-gray-400">Points: {problem.points}</span>
         </div>
 
-        <p className="text-gray-300 text-sm leading-relaxed">
+        <p className="text-sm text-gray-300 leading-relaxed line-clamp-4">
           {problem.description}
         </p>
 
-        <div className="text-xs text-gray-500 mt-4">
-          Created At: {format(new Date(problem.createdAt), "MMM dd, yyyy")}
-        </div>
-
-        <div className="flex justify-between mt-6 space-x-3">
+        <div className="flex justify-end gap-3 pt-4">
           <Button
-            variant="destructive"
-            className="group flex items-center gap-2 bg-red-600 text-white hover:bg-white hover:text-red-600 transition-all duration-200 rounded-lg px-4 py-2 cursor-pointer"
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition"
             onClick={() => onDelete(problem.slug)}
           >
-            <LucideTrash className="w-5 h-5 group-hover:text-red-700" />
-            <span>Delete</span>
+            <LucideTrash className="w-4 h-4" />
+            Delete
           </Button>
 
           <Button
             variant="outline"
-            className="group flex items-center gap-2 bg-blue-600 text-white hover:bg-white hover:text-blue-600 transition-all duration-200 rounded-lg px-4 py-2 cursor-pointer"
+            size="sm"
+            className="flex items-center gap-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition"
           >
-            <LucideEdit className="w-5 h-5 group-hover:text-blue-700" />
-            <span>Update</span>
+            <LucideEdit className="w-4 h-4" />
+            Update
           </Button>
         </div>
-
-        {problem.iconPath && (
-          <div className="mt-6 flex justify-center">
-            <Image
-              src={`/icons/${problem.iconPath}`}
-              alt={problem.name}
-              width={64}
-              height={64}
-              className="rounded-full border-2 border-gray-500 shadow-lg transition-transform duration-300 hover:scale-110"
-            />
-          </div>
-        )}
       </CardContent>
     </Card>
   );
