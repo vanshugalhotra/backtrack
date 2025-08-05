@@ -57,7 +57,7 @@ export default function AdminTestsPage() {
                 key={test.id}
                 name={test.name}
                 description={test.description}
-                image="/test.jpg"
+                image="/test.png"
                 hasStarted={test.hasStarted}
                 onStart={() => console.log("Start test not implemented")}
                 onDelete={() => handleDeleteRequest(test.slug)}
