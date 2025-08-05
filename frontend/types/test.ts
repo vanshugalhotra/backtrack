@@ -11,3 +11,10 @@ export interface TestDetail {
   updatedAt: string;
   problems: Problem[];
 }
+export interface TestFormData {
+  name: string;
+  slug: string;
+  description?: string;
+  password: string;
+  problems: string[];
+}
