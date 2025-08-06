@@ -3,19 +3,28 @@
 import RequireAdmin from "@/components/auth/RequireAdmin";
 import useTests from "@/hooks/useTests";
 import useDeleteTest from "@/hooks/useDeleteTest";
+import useStartTest from "@/hooks/useStartTest";
+import useStopTest from "@/hooks/useStopTest";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import TestCardAdmin from "@/components/ui/TestCardAdmin";
 import DeleteModal from "@/components/ui/Modal/DeleteModal";
+import PasswordModal from "@/components/ui/Modal/PasswordModal";
 import { toast } from "sonner";
 import { useState } from "react";
 
 export default function AdminTestsPage() {
   const { tests } = useTests();
   const { deleteTest } = useDeleteTest();
+  const { startTest } = useStartTest();
+  const { stopTest } = useStopTest();
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [testToDelete, setTestToDelete] = useState<string | null>(null);
+
+  const [isPasswordModalOpen, setPasswordModalOpen] = useState(false);
+  const [testToStart, setTestToStart] = useState<string | null>(null);
+  const [isStopFlow, setIsStopFlow] = useState(false);
 
   const handleConfirmDelete = async () => {
     if (!testToDelete) return;
@@ -34,6 +43,38 @@ export default function AdminTestsPage() {
   const handleDeleteRequest = (slug: string) => {
     setTestToDelete(slug);
     setModalOpen(true);
+  };
+
+  const handleStartRequest = (slug: string) => {
+    setIsStopFlow(false);
+    setTestToStart(slug);
+    setPasswordModalOpen(true);
+  };
+
+  const handleConfirmStart = async (password: string) => {
+    if (!testToStart) return;
+
+    const result = isStopFlow
+      ? await stopTest(testToStart, password)
+      : await startTest(testToStart, password);
+
+    if (result.success) {
+      toast.success(`Test ${isStopFlow ? "ended" : "started"} successfully`);
+    } else {
+      toast.error(
+        result.error || `Error ${isStopFlow ? "ending" : "starting"} the test`
+      );
+    }
+
+    setPasswordModalOpen(false);
+    setTestToStart(null);
+    setIsStopFlow(false);
+  };
+
+  const handleStopRequest = (slug: string) => {
+    setIsStopFlow(true);
+    setTestToStart(slug);
+    setPasswordModalOpen(true);
   };
 
   return (
@@ -59,8 +100,9 @@ export default function AdminTestsPage() {
                 description={test.description}
                 image="/test.png"
                 hasStarted={test.hasStarted}
-                onStart={() => console.log("Start test not implemented")}
+                onStart={() => handleStartRequest(test.slug)}
                 onDelete={() => handleDeleteRequest(test.slug)}
+                onStop={() => handleStopRequest(test.slug)}
               />
             ))}
           </div>
@@ -72,6 +114,12 @@ export default function AdminTestsPage() {
           onConfirm={handleConfirmDelete}
           slug={testToDelete ?? ""}
           type="test"
+        />
+
+        <PasswordModal
+          open={isPasswordModalOpen}
+          onClose={() => setPasswordModalOpen(false)}
+          onSubmit={handleConfirmStart}
         />
       </main>
     </RequireAdmin>

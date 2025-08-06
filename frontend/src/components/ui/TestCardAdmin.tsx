@@ -10,6 +10,7 @@ interface TestCardAdminProps {
   description: string | null;
   image: string;
   onStart: () => void;
+  onStop: () => void;
   onDelete: () => void;
   hasStarted: boolean;
 }
@@ -19,6 +20,7 @@ const TestCardAdmin: React.FC<TestCardAdminProps> = ({
   description,
   image,
   onStart,
+  onStop,
   onDelete,
   hasStarted,
 }) => {
@@ -60,16 +62,19 @@ const TestCardAdmin: React.FC<TestCardAdminProps> = ({
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              if (!hasStarted) onStart();
+              if (hasStarted) {
+                onStop();
+              } else {
+                onStart();
+              }
             }}
-            disabled={hasStarted}
             className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200 ${
               hasStarted
-                ? "bg-gray-600 text-white/80 cursor-not-allowed"
+                ? "bg-yellow-600 hover:bg-yellow-700 text-white"
                 : "bg-green-600 hover:bg-green-700 text-white"
             }`}
           >
-            {hasStarted ? "Already Started" : "Start Test"}
+            {hasStarted ? "End Test" : "Start Test"}
           </Button>
 
           <Button
