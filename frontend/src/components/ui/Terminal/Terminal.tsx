@@ -82,6 +82,12 @@ const Terminal: React.FC = () => {
         </div>
 
         <ProblemHeader problem={selectedProblem} />
+        {selectedProblem?.description && (
+          <div className="bg-white/5 border border-white/10 p-3 rounded-md text-sm text-white/80">
+            <span className="text-cyan-400 font-semibold">Input Format:</span>{" "}
+            <span>{selectedProblem.description}</span>
+          </div>
+        )}
 
         <div
           ref={scrollRef}

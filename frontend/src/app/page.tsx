@@ -22,7 +22,7 @@ export default function HomePage() {
 
   return (
     <RequireAuth>
-      <main className="relative min-h-screen w-full flex flex-col items-center justify-start px-6 py-16 text-white overflow-hidden">
+      <main className="relative min-h-screen w-full flex flex-col items-center justify-start px-6 py-12 text-white overflow-hidden">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 z-0 w-full h-full"
