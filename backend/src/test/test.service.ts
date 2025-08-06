@@ -89,7 +89,7 @@ export class TestService {
     return tests;
   }
 
-  async getTestBySlug(slug: string): Promise<Test> {
+  async getTestBySlug(slug: string, password?: string): Promise<Test> {
     const test = await this.prisma.test.findUnique({
       where: { slug },
       include: { problems: true },
@@ -97,6 +97,10 @@ export class TestService {
 
     if (!test) {
       throw new NotFoundException(`Test with slug "${slug}" not found`);
+    }
+
+    if (test.password && test.password !== password) {
+      throw new PermissionDeniedError('Incorrect password');
     }
 
     return test;
@@ -124,6 +128,28 @@ export class TestService {
       data: { hasStarted: true },
     });
   }
+  async stopTest(slug: string, password: string): Promise<void> {
+    const test = await this.prisma.test.findUnique({
+      where: { slug },
+    });
+
+    if (!test) {
+      throw new BadRequestException(`Test not found: ${slug}`);
+    }
+
+    if (test.password !== password) {
+      throw new PermissionDeniedError('Invalid password');
+    }
+
+    if (!test.hasStarted) {
+      throw new BadRequestException('Test has already ended');
+    }
+
+    await this.prisma.test.update({
+      where: { slug },
+      data: { hasStarted: false },
+    });
+  }
 
   async deleteTest(slug: string) {
     const test = await this.prisma.test.findUnique({ where: { slug } });
@@ -135,5 +161,18 @@ export class TestService {
     await this.prisma.test.delete({ where: { slug } });
 
     return { message: `Test "${slug}" deleted successfully.` };
+  }
+
+  async isStartedBySlug(slug: string): Promise<boolean> {
+    const test = await this.prisma.test.findUnique({
+      where: { slug },
+      select: { hasStarted: true },
+    });
+
+    if (!test) {
+      throw new NotFoundException('Test not found');
+    }
+
+    return test.hasStarted;
   }
 }

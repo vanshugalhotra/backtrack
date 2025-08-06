@@ -15,7 +15,6 @@ import { JwtAuthGuard } from 'src/auth/gaurd/jwt-auth.gaurd';
 import { RolesGuard } from 'src/auth/gaurd/roles.gaurd';
 import { Test } from '@prisma/client';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { PermissionDeniedError } from 'src/common/errors/http-error';
 
 @Controller('tests')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -43,13 +42,7 @@ export class TestController {
     @Param('slug') slug: string,
     @Query('password') password: string,
   ): Promise<Test> {
-    const test = await this.testService.getTestBySlug(slug);
-
-    if (test.password && test.password !== password) {
-      throw new PermissionDeniedError('Incorrect password');
-    }
-
-    return test;
+    return this.testService.getTestBySlug(slug, password);
   }
 
   @Post(':slug/start')
@@ -57,10 +50,21 @@ export class TestController {
   @Version('1')
   async startTest(
     @Param('slug') slug: string,
-    @Body('password') password: string,
+    @Query('password') password: string,
   ): Promise<{ message: string }> {
     await this.testService.startTest(slug, password);
     return { message: 'Test started successfully' };
+  }
+
+  @Post(':slug/stop')
+  @Roles('ADMIN')
+  @Version('1')
+  async stopTest(
+    @Param('slug') slug: string,
+    @Query('password') password: string,
+  ): Promise<{ message: string }> {
+    await this.testService.stopTest(slug, password);
+    return { message: 'Test ended successfully' };
   }
 
   @Delete(':slug')
@@ -68,5 +72,12 @@ export class TestController {
   @Version('1')
   async deleteTest(@Param('slug') slug: string) {
     return this.testService.deleteTest(slug);
+  }
+  @Get(':slug/isstarted')
+  @Version('1')
+  @Roles('USER', 'ADMIN')
+  async isTestStarted(@Param('slug') slug: string) {
+    const hasStarted = await this.testService.isStartedBySlug(slug);
+    return { hasStarted };
   }
 }

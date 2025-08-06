@@ -166,38 +166,35 @@ describe('Tests API (e2e)', () => {
     expect(res.status).toBe(404);
   });
   it('/api/v1/tests/:slug/start (POST) - should start a test', async () => {
-    const data = {
-      password: 'letmein',
-    };
-
     const res = await request(server)
       .post('/api/v1/tests/sample-test/start')
-      .set('Authorization', `Bearer ${token}`)
-      .send(data);
+      .query({ password: 'letmein' })
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(201);
   });
-  it('/api/v1/tests/:slug/start (POST) - should say invalid password', async () => {
-    const data = {
-      password: 'invalidpass',
-    };
 
+  it('/api/v1/tests/:slug/isstarted (GET) - should say test has started', async () => {
+    const res = await request(server)
+      .get('/api/v1/tests/sample-test/isstarted')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(200);
+  });
+
+  it('/api/v1/tests/:slug/start (POST) - should say invalid password', async () => {
     const res = await request(server)
       .post('/api/v1/tests/sample-test/start')
-      .set('Authorization', `Bearer ${token}`)
-      .send(data);
+      .query({ password: 'invalidpass' })
+      .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(403);
   });
   it('/api/v1/tests/:slug/start (POST) - should say test has already started', async () => {
-    const data = {
-      password: 'letmein',
-    };
-
     const res = await request(server)
       .post('/api/v1/tests/sample-test/start')
-      .set('Authorization', `Bearer ${token}`)
-      .send(data);
+      .query({ password: 'letmein' })
+      .set('Authorization', `Bearer ${token}`);
+
     const body = res.body as HttpError;
     expect(res.status).toBe(400);
     expect(body.message).toContain('Test has already started');
