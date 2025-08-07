@@ -4,24 +4,18 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
-import {
-  LucideLayoutDashboard,
-  LucidePlusCircle,
-  LucideList,
-  LucideClipboardList,
-  LucideClipboardPlus,
-} from "lucide-react";
+import { Orbit, FilePlus, BookText, TestTube, ListChecks } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { GlobalUIOverlay } from "@/components/chors/GlobalUIOverlay";
 import { GlobalUIProvider } from "../../../context/GlobalUIContext";
 import RequireAdmin from "@/components/auth/RequireAdmin";
 
 const adminNavItems = [
-  { label: "Dashboard", href: "/admin", icon: LucideLayoutDashboard },
-  { label: "Add Problem", href: "/admin/problems/add", icon: LucidePlusCircle },
-  { label: "Problems", href: "/admin/problems", icon: LucideList },
-  { label: "Add Test", href: "/admin/tests/add", icon: LucideClipboardPlus },
-  { label: "Tests", href: "/admin/tests", icon: LucideClipboardList },
+  { label: "Dashboard", href: "/admin", icon: Orbit },
+  { label: "Add Problem", href: "/admin/problems/add", icon: FilePlus },
+  { label: "Problems", href: "/admin/problems", icon: BookText },
+  { label: "Add Test", href: "/admin/tests/add", icon: TestTube },
+  { label: "Tests", href: "/admin/tests", icon: ListChecks },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -39,12 +33,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             backgroundAttachment: "fixed",
           }}
         >
-          <aside className="w-72 min-h-screen bg-gradient-to-b from-[#0d1117] to-[#161b22] text-white flex flex-col px-6 py-8 border-r border-white/10 shadow-xl backdrop-blur-2xl">
-            <h1 className="text-4xl font-extrabold tracking-tight mb-12 text-center bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <aside className="w-80 min-h-screen bg-gradient-to-b from-[#0d1117] to-[#161b22] text-white flex flex-col px-8 py-10 border-r border-white/10 shadow-2xl backdrop-blur-xl">
+            <h1 className="text-3xl font-extrabold text-center tracking-wider text-transparent bg-gradient-to-r from-sky-400 via-cyan-400 to-indigo-400 bg-clip-text mb-14">
               BACKTRACK ADMIN
             </h1>
 
-            <nav className="flex flex-col gap-4">
+            <nav className="flex flex-col gap-5">
               {adminNavItems.map((item) => {
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
@@ -54,27 +48,31 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "group flex items-center gap-5 px-5 py-4 rounded-xl text-base font-semibold transition-all duration-200",
+                      "group flex items-center gap-4 px-5 py-3.5 rounded-xl transition-all duration-200",
                       isActive
-                        ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md scale-105"
-                        : "text-white/70 hover:text-white hover:bg-white/10 hover:scale-105"
+                        ? "bg-gradient-to-r from-[#2e335a] to-[#1c1b33] text-white shadow-md scale-[1.03]"
+                        : "text-white/70 hover:text-white hover:bg-white/10 hover:scale-[1.03]"
                     )}
                   >
-                    <Icon className="w-6 h-6 group-hover:scale-110 transition-transform duration-150" />
-                    <span className="tracking-wide">{item.label}</span>
+                    <span className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 group-hover:border-indigo-400 transition-all">
+                      <Icon className="w-5 h-5 text-cyan-300 group-hover:scale-110 transition-transform duration-200" />
+                    </span>
+                    <span className="tracking-wide font-semibold text-base">
+                      {item.label}
+                    </span>
                   </Link>
                 );
               })}
             </nav>
 
-            <div className="mt-auto pt-16 text-xs text-white/30 text-center border-t border-white/10">
+            <div className="mt-auto pt-16 text-sm text-white/30 text-center border-t border-white/10">
               <p className="mt-4">
                 &copy; {new Date().getFullYear()} InfoTrek. All rights reserved.
               </p>
             </div>
           </aside>
 
-          <main className="flex-1 p-8 overflow-auto bg-zinc-950/60">
+          <main className="flex-1 p-10 overflow-auto bg-zinc-950/60">
             {children}
             <Toaster
               richColors
@@ -84,6 +82,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             />
           </main>
         </div>
+        a
         <GlobalUIOverlay />
       </RequireAdmin>
     </GlobalUIProvider>

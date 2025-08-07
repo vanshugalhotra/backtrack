@@ -9,15 +9,24 @@ type Props = {
 
 const ProblemHeader: React.FC<Props> = ({ problem }) => {
   return (
-    <div className="text-center mb-6">
-      <h1 className="text-xl text-cyan-400 font-semibold tracking-widest uppercase">
-        INFOTREK&apos;25 - BACKTRACK
+    <div className="text-center mb-8 space-y-4">
+      {/* Event Header */}
+      <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-indigo-400 to-purple-500 text-lg sm:text-xl font-mono font-bold tracking-[0.3em] uppercase">
+        INFOTREK’25 – BACKTRACK
       </h1>
-      <h2 className="text-3xl text-white font-bold mt-2">
+
+      {/* Problem Title */}
+      <h2 className="text-3xl sm:text-4xl font-bold text-white/90">
         {problem ? problem.name : "No problem selected"}
       </h2>
-      <p className="text-sm text-gray-400 mt-2">
-        Type <code className="text-yellow-400">$clear</code> to clear the terminal.
+
+      {/* Terminal Instruction */}
+      <p className="text-sm sm:text-base text-gray-400">
+        Type{" "}
+        <code className="bg-white/5 border border-cyan-400/20 text-cyan-300 px-2 py-0.5 rounded-md font-mono shadow-sm">
+          $clear
+        </code>{" "}
+        to clear the terminal.
       </p>
     </div>
   );
