@@ -19,6 +19,8 @@ model Problem {
   iconPath    String? // optional path to the icon file (could be a URL or file path)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  tests       Test[]     @relation("TestProblems")
 }
 
 // Enum for difficulty levels
@@ -40,4 +42,16 @@ model User {
 enum Role {
   USER
   ADMIN
+}
+
+model Test {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  password    String // plain-text or minimally hashed
+  hasStarted  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  problems    Problem[] @relation("TestProblems")
 }

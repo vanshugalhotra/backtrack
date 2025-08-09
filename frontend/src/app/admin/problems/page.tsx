@@ -54,9 +54,10 @@ export default function ProblemsListPage() {
       </div>
       <DeleteModal
         isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)} 
-        onConfirm={handleDelete} 
-        problemSlug={problemToDelete ? problemToDelete : ""}
+        onClose={() => setModalOpen(false)}
+        onConfirm={handleDelete}
+        slug={problemToDelete ? problemToDelete : ""}
+        type="problem"
       />
     </div>
   );

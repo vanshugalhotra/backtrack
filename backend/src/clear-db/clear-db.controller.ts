@@ -43,6 +43,20 @@ export class ClearDbController {
     return { message: 'All problems have been deleted successfully.' };
   }
 
+  @Delete('tests')
+  @Roles('ADMIN')
+  @Version('1')
+  async clearTests() {
+    if (process.env.NODE_ENV === 'production') {
+      throw new ForbiddenException(
+        'This operation is not allowed in production.',
+      );
+    }
+
+    await this.clearDbService.clearTests();
+    return { message: 'All tests have been deleted successfully.' };
+  }
+
   @Delete('all')
   @Roles('ADMIN')
   @Version('1')

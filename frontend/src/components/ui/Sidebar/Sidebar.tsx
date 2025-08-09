@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import ChallengeList from "./ChallengeList";
 import { Menu, X } from "lucide-react";
-import useProblems from "@/hooks/useProblems";
 import { Problem } from "../../../../types/problem";
 import { useProblemContext } from "../../../../context/ProblemContext";
 
-const Sidebar: React.FC = () => {
+type SidebarProps = { problems: Problem[] };
+
+const Sidebar: React.FC<SidebarProps> = ({ problems }) => {
   const [open, setOpen] = useState(false);
 
-  const { problems } = useProblems();
   const { selectedProblem, setSelectedProblem } = useProblemContext();
   const selectedSlug = selectedProblem?.slug || "";
 

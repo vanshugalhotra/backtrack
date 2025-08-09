@@ -206,6 +206,13 @@ describe('Problems API (e2e)', () => {
     expect(res.statusCode).toBe(200);
   });
 
+  it('/api/v1/clear-db/problems (DELETE) - should truncate the problems table', async () => {
+    const res = await request(server)
+      .delete('/api/v1/clear-db/problems')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+  });
+
   afterAll(async () => {
     await app.close();
   });
