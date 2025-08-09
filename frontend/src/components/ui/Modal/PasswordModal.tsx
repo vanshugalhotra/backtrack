@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,11 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           <DialogTitle className="text-cyan-400 text-2xl font-semibold tracking-wide text-center">
             Enter Test Password
           </DialogTitle>
+          <DialogDescription className="text-sm text-white/60 text-center">
+            This test is protected. Please enter the password to access it.
+          </DialogDescription>
         </DialogHeader>
+
         <div className="space-y-3">
           <Input
             type="password"
@@ -46,10 +51,8 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             onChange={(e) => setPassword(e.target.value)}
             className="bg-white/5 border border-white/20 text-white placeholder-white/40 h-12 px-4 text-base rounded-md focus-visible:ring-2 focus-visible:ring-cyan-600"
           />
-          <p className="text-sm text-white/60 text-center">
-            This test is protected. Please enter the password to access it.
-          </p>
         </div>
+
         <Button
           onClick={handleSubmit}
           className="w-full h-11 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-md transition-colors"
