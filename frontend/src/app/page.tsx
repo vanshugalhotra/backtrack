@@ -31,7 +31,7 @@ export default function HomePage() {
           />
 
           {/* Heading Section */}
-          <div className="relative z-10 text-center mb-12 space-y-2">
+          <div className="relative z-10 text-center mb-12 space-y-2" data-testid="homepage-heading">
             <p className="text-base uppercase tracking-widest text-cyan-400 font-semibold">
               Presented by ACM NIT Trichy
             </p>
@@ -45,7 +45,7 @@ export default function HomePage() {
 
           {/* Test Grid Section */}
           <section className="relative z-10 w-full max-w-7xl px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" data-testid="tests-grid">
               {tests?.map((test) => (
                 <TestCard
                   key={test.slug}

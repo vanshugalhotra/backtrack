@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
       <div className="max-w-7xl mx-auto space-y-14">
         {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-5xl font-extrabold tracking-tight">BackTrack Admin</h1>
+          <h1 data-testid="dashboard-title" className="text-5xl font-extrabold tracking-tight">BackTrack Admin</h1>
           <p className="text-zinc-400 text-lg">
             Centralized management for problems, tests, and users
           </p>
@@ -36,7 +36,7 @@ export default function AdminDashboardPage() {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Total Problems */}
-          <Card className="bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border border-white/10 shadow-md rounded-xl">
+          <Card className="bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border border-white/10 shadow-md rounded-xl" data-testid="stat-total-problems">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-white">Total Problems</CardTitle>
               <ListTodo size={28} className="text-blue-400" />
@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
           </Card>
 
           {/* Total Tests */}
-          <Card className="bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border border-white/10 shadow-md rounded-xl">
+          <Card className="bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border border-white/10 shadow-md rounded-xl" data-testid="stat-total-tests">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-white">Total Tests</CardTitle>
               <ClipboardList size={28} className="text-purple-400" />
@@ -58,7 +58,7 @@ export default function AdminDashboardPage() {
           </Card>
 
           {/* Total Users */}
-          <Card className="bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border border-white/10 shadow-md rounded-xl">
+          <Card className="bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border border-white/10 shadow-md rounded-xl" data-testid="stat-total-users">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-white">Total Users</CardTitle>
               <Users size={28} className="text-green-400" />

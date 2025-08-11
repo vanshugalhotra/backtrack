@@ -1,39 +1,24 @@
-import { test, expect, request } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
-test("homepage loads and shows content after login", async ({
-  page,
-  baseURL,
-}) => {
-  // 1. Create API request context for backend calls
-  const apiContext = await request.newContext({
-    baseURL: "http://localhost:3333", // your backend API base
+const userEmail = process.env.USER_EMAIL!;
+const userPassword = process.env.USER_PASSWORD!;
+
+test.describe("Homepage loads after user login", () => {
+  test("should log in and display homepage content", async ({ page, baseURL }) => {
+    // 1. Go to login page
+    await page.goto("/login");
+
+    // 2. Fill in credentials from env
+    await page.getByPlaceholder("Email").fill(userEmail);
+    await page.getByPlaceholder("Password").fill(userPassword);
+
+    // 3. Click login
+    await page.getByRole("button", { name: /^Login$/ }).click();
+
+    // 4. Go to homepage
+    await page.goto(baseURL!);
+
+    // 5. Assert UI via testids (safe against text changes)
+    await expect(page.getByTestId("homepage-heading")).toBeVisible();
   });
-
-  // 2. Register a test user (adjust payload if your API differs)
-  const registerResponse = await apiContext.post("/api/v1/auth/register", {
-    data: {
-      email: `pw_${Date.now()}@test.com`,
-      password: "testpass123",
-      role: "USER",
-    },
-  });
-
-  expect(registerResponse.ok()).toBeTruthy();
-
-  const { access_token } = await registerResponse.json();
-  expect(access_token).toBeTruthy();
-
-  // 3. Inject token into localStorage before page load
-  await page.addInitScript(
-    ([token]) => {
-      localStorage.setItem("token", token);
-    },
-    [access_token]
-  );
-
-  // 4. Go to homepage
-  await page.goto(baseURL!);
-
-  // 5. Assert something visible (change selector to match your UI)
-  await expect(page.getByText("Presented by ACM NIT Trichy")).toBeVisible();
 });

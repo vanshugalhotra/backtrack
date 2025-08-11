@@ -1,5 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' });
+
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 30_000,
