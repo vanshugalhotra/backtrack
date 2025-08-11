@@ -20,3 +20,7 @@ out/
 # Logs
 logs/
 *.log
+
+# Playwright artifacts
+frontend/playwright-report/
+frontend/test-results/
