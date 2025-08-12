@@ -31,7 +31,10 @@ export default function HomePage() {
           />
 
           {/* Heading Section */}
-          <div className="relative z-10 text-center mb-12 space-y-2" data-testid="homepage-heading">
+          <div
+            className="relative z-10 text-center mb-12 space-y-2"
+            data-testid="homepage-heading"
+          >
             <p className="text-base uppercase tracking-widest text-cyan-400 font-semibold">
               Presented by ACM NIT Trichy
             </p>
@@ -42,26 +45,39 @@ export default function HomePage() {
               BackTrack
             </p>
           </div>
-
           {/* Test Grid Section */}
           <section className="relative z-10 w-full max-w-7xl px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" data-testid="tests-grid">
-              {tests?.map((test) => (
-                <TestCard
-                  key={test.slug}
-                  name={test.name}
-                  description={test.description ?? ""}
-                  image="/test.png"
-                  onClick={() => {
-                    setSelectedTest({
-                      slug: test.slug,
-                      password: test.password,
-                    });
-                    setIsModalOpen(true);
-                  }}
-                />
-              ))}
-            </div>
+            {tests && tests.length > 0 ? (
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                data-testid="tests-grid"
+              >
+                {tests.map((test) => (
+                  <TestCard
+                    key={test.slug}
+                    name={test.name}
+                    description={test.description ?? ""}
+                    image="/test.png"
+                    onClick={() => {
+                      setSelectedTest({
+                        slug: test.slug,
+                        password: test.password,
+                      });
+                      setIsModalOpen(true);
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-32 text-center space-y-3" data-testid="no-tests-message">
+                <h2 className="text-2xl sm:text-3xl font-semibold text-cyan-300 drop-shadow-lg">
+                  No Tests Available
+                </h2>
+                <p className="text-base sm:text-lg text-cyan-200 opacity-80 max-w-md">
+                  The galaxy is quiet for now. Please check back soon.
+                </p>
+              </div>
+            )}
           </section>
 
           {/* Modal */}
