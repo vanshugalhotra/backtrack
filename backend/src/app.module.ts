@@ -6,6 +6,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { AuthModule } from './auth/auth.module';
 import { ClearDbModule } from './clear-db/clear-db.module';
 import { TestModule } from './test/test.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TestModule } from './test/test.module';
     AuthModule,
     ClearDbModule,
     TestModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],
