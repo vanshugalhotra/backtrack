@@ -7,6 +7,9 @@ import helmet from 'helmet';
 import { LoggerService } from './common/logger/logger.service';
 import { BadRequestError } from './common/errors/http-error';
 
+import { join } from 'path';
+import * as express from 'express';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -50,6 +53,9 @@ async function bootstrap() {
   });
 
   app.enableShutdownHooks();
+
+  // serve uploaded icons statically at /icons
+  app.use('/icons', express.static(join(process.cwd(), 'uploads', 'icons')));
 
   // Start the app and catch any potential rejection
   await app.listen(process.env.PORT ?? 3000).catch((err) => {
