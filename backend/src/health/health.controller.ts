@@ -1,5 +1,6 @@
-import { Controller, Get, Version } from '@nestjs/common';
+import { Controller, Get, Version, Res } from '@nestjs/common';
 import { HealthService } from './health.service';
+import { Response } from 'express';
 
 @Controller('health')
 export class HealthController {
@@ -25,7 +26,14 @@ export class HealthController {
 
   @Get('metrics')
   @Version('1')
-  getMetrics() {
-    return this.healthService.getMetrics();
+  async getMetrics(@Res({ passthrough: true }) res: Response) {
+    res.setHeader('Content-Type', this.healthService.getPromContentType());
+    return this.healthService.getPrometheusMetrics();
+  }
+
+  @Get('metrics-json')
+  @Version('1')
+  getMetricsJson() {
+    return this.healthService.getMetricsJson();
   }
 }

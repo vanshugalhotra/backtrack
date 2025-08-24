@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common';
+// health.service.ts
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import * as os from 'os';
+import { collectDefaultMetrics, register } from 'prom-client';
 
 @Injectable()
-export class HealthService {
+export class HealthService implements OnModuleInit {
   private uploadDirs = [
     join(process.cwd(), 'uploads', 'icons'),
     join(process.cwd(), 'uploads', 'executables'),
   ];
+
+  onModuleInit() {
+    collectDefaultMetrics({ register, prefix: 'backtrack_' });
+  }
 
   getLiveness() {
     return {
@@ -61,7 +67,15 @@ export class HealthService {
     }
   }
 
-  getMetrics() {
+  async getPrometheusMetrics(): Promise<string> {
+    return register.metrics();
+  }
+
+  getPromContentType(): string {
+    return register.contentType;
+  }
+
+  getMetricsJson() {
     return {
       uptime: process.uptime(),
       memoryUsage: process.memoryUsage(),
