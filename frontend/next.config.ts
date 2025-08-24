@@ -1,12 +1,16 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Rewrites to proxy requests to the backend API
   async rewrites() {
     return [
       {
-        source: '/api/:path*', // Match anything starting with /api
-        destination: 'http://localhost:3333/api/:path*', // Redirect to backend API running on port 3333
+        source: "/api/:path*", // Match anything starting with /api
+        destination: "http://localhost:3333/api/:path*", // Redirect to backend API running on port 3333
+      },
+      {
+        source: "/icons/:path*",
+        destination: "http://localhost:3333/icons/:path*", // proxy to backend for icons
       },
     ];
   },

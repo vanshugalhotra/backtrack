@@ -12,6 +12,8 @@ import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // serve uploaded icons statically at /icons
+  app.use('/icons', express.static(join(process.cwd(), 'uploads', 'icons')));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -53,9 +55,6 @@ async function bootstrap() {
   });
 
   app.enableShutdownHooks();
-
-  // serve uploaded icons statically at /icons
-  app.use('/icons', express.static(join(process.cwd(), 'uploads', 'icons')));
 
   // Start the app and catch any potential rejection
   await app.listen(process.env.PORT ?? 3000).catch((err) => {
