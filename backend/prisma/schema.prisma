@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // This will be read from your .env file
+  url      = env("DIRECT_DATABASE_URL") // This will be read from your .env file
 }
 
 model Problem {
