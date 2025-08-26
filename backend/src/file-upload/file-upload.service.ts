@@ -9,8 +9,8 @@ import {
 
 @Injectable()
 export class FileUploadService {
-  private iconDir = join(process.cwd(), '..', 'frontend', 'public', 'icons');
-  private exeDir = join(process.cwd(), 'executables');
+  private iconDir = join(process.cwd(), 'uploads', 'icons');
+  private exeDir = join(process.cwd(), 'uploads', 'executables');
 
   constructor(private readonly logger: LoggerService) {}
 

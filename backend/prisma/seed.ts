@@ -6,9 +6,9 @@ async function main() {
   await prisma.problem.createMany({
     data: [
       {
-        name: 'Hello World',
-        slug: 'hello-world',
-        difficulty: 'EASY',
+        name: 'Cosmic Diagonals',
+        slug: 'cosmic-diagonals',
+        difficulty: 'MEDIUM',
         points: 10,
         exePath: 'executables/hello-world.exe',
         description: 'Print "Hello, World!" to the console.',

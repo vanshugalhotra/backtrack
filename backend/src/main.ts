@@ -7,8 +7,13 @@ import helmet from 'helmet';
 import { LoggerService } from './common/logger/logger.service';
 import { BadRequestError } from './common/errors/http-error';
 
+import { join } from 'path';
+import * as express from 'express';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // serve uploaded icons statically at /icons
+  app.use('/icons', express.static(join(process.cwd(), 'uploads', 'icons')));
 
   app.useGlobalPipes(
     new ValidationPipe({
