@@ -87,6 +87,8 @@ jobs:
         run: |
           echo "DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/backtrack_test" > backend/.env.test
           echo "DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/backtrack_test" > backend/.env
+          echo "DIRECT_DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/backtrack_test" > backend/.env.test
+          echo "DIRECT_DATABASE_URL=postgresql://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@localhost:5432/backtrack_test" > backend/.env
           echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> backend/.env
           echo "JWT_SECRET=${{secrets.JWT_SECRET}}" >> backend/.env.test
 
