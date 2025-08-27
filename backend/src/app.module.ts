@@ -8,6 +8,7 @@ import { ClearDbModule } from './clear-db/clear-db.module';
 import { TestModule } from './test/test.module';
 import { HealthModule } from './health/health.module';
 import { MetricsModule } from './common/metrics/metrics.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MetricsModule } from './common/metrics/metrics.module';
     ClearDbModule,
     TestModule,
     HealthModule,
+    PrismaModule,
   ],
   controllers: [],
   providers: [],
