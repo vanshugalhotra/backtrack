@@ -27,6 +27,12 @@ RUN npm prune --production
 # ---- Stage 1: runtime ----
 FROM node:22-bullseye-slim AS runner
 
+# Install g++ for runtime compilation of user C++ files
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends g++ \
+  && rm -rf /var/lib/apt/lists/*
+
+
 # Create non-root user
 RUN groupadd -r app && useradd -r -g app app
 
