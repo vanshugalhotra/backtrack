@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { join } from 'path';
 import { promises as fs } from 'fs';
+import { exec } from 'child_process';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { platform } from 'os';
+
 import {
   BadRequestError,
   InternalServerError,
 } from 'src/common/errors/http-error';
 
+const isWindows = platform() === 'win32';
 @Injectable()
 export class FileUploadService {
   private iconDir = join(process.cwd(), 'uploads', 'icons');
@@ -32,6 +36,62 @@ export class FileUploadService {
     return this.saveFile(file, this.exeDir);
   }
 
+  async saveCppAndCompile(
+    file: Express.Multer.File,
+  ): Promise<{ fileName: string }> {
+    if (!file) {
+      this.logger.error('No C++ file provided');
+      throw new BadRequestError('No C++ file provided.');
+    }
+
+    const saved = await this.saveFile(file, this.exeDir);
+    const cppPath = join(this.exeDir, saved.fileName);
+
+    const outputName = saved.fileName.replace(
+      /\.cpp$/,
+      isWindows ? '.exe' : '.out',
+    );
+    const outputPath = join(this.exeDir, outputName);
+
+    this.logger.log(`Compiling ${cppPath} -> ${outputPath}`);
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        exec(`g++ "${cppPath}" -o "${outputPath}"`, (error, stdout, stderr) => {
+          if (error) {
+            this.logger.error(`Compilation failed: ${stderr || error.message}`);
+            return reject(
+              new BadRequestError('Compilation failed. Check your C++ code.'),
+            );
+          }
+
+          if (stderr) {
+            this.logger.warn(`Compilation warnings: ${stderr}`);
+          }
+
+          if (stdout) {
+            this.logger.log(`Compiler messages: ${stdout}`);
+          }
+
+          resolve();
+        });
+      });
+
+      this.logger.log(`Compilation successful: ${outputName}`);
+      return { fileName: outputName };
+    } catch (err) {
+      if (err instanceof Error) {
+        this.logger.error(`Failed to compile C++ file: ${err.message}`);
+        throw new InternalServerError('Failed to compile C++ file.', {
+          error: err.message,
+        });
+      } else {
+        this.logger.error('Unknown error while compiling C++ file');
+        throw new InternalServerError('Failed to compile C++ file.');
+      }
+    }
+  }
+
   private async saveFile(
     file: Express.Multer.File,
     directory: string,
@@ -50,15 +110,12 @@ export class FileUploadService {
       this.logger.log(`File saved: ${file.originalname}`);
       return { fileName: file.originalname };
     } catch (err) {
-      // Safely handle the error
       if (err instanceof Error) {
-        // Only access `err.message` if it's an instance of `Error`
         this.logger.error(`Failed to save file: ${err.message}`);
         throw new InternalServerError('Failed to save file.', {
           error: err.message,
         });
       } else {
-        // If `err` is not an `Error` instance, log a generic error message
         this.logger.error('An unknown error occurred while saving the file');
         throw new InternalServerError('Failed to save file.');
       }

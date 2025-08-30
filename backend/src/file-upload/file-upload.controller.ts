@@ -33,4 +33,15 @@ export class FileUploadController {
 
     return this.fileUploadService.saveExecutable(file);
   }
+
+  @Post('cpp')
+  @Version('1')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadCpp(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestError('No C++ file uploaded.');
+    }
+
+    return this.fileUploadService.saveCppAndCompile(file);
+  }
 }

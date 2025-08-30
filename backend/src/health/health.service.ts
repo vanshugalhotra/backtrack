@@ -1,10 +1,10 @@
-// health.service.ts
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import * as os from 'os';
 import { collectDefaultMetrics, register } from 'prom-client';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class HealthService implements OnModuleInit {
@@ -12,6 +12,8 @@ export class HealthService implements OnModuleInit {
     join(process.cwd(), 'uploads', 'icons'),
     join(process.cwd(), 'uploads', 'executables'),
   ];
+
+  constructor(private readonly prisma: PrismaService) {}
 
   onModuleInit() {
     collectDefaultMetrics({ register, prefix: 'backtrack_' });
@@ -32,10 +34,14 @@ export class HealthService implements OnModuleInit {
         await fs.access(dir, fs.constants.W_OK);
       }
 
+      // DATABASE CHECK
+      await this.prisma.$queryRaw`SELECT 1;`;
+
       return {
         status: 'ok',
         details: {
           uploads: 'writable',
+          database: 'connected',
           memory: process.memoryUsage(),
           uptime: process.uptime(),
         },

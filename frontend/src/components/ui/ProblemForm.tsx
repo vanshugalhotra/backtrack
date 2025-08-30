@@ -202,10 +202,11 @@ export default function ProblemForm({
 
         {/* Executable File */}
         <div className="space-y-2 col-span-full">
-          <Label htmlFor="exePath">Executable File</Label>
+          <Label htmlFor="exePath">Executable / C++ File</Label>
           <Input
             id="exePath"
             type="file"
+            accept=".exe,.out,.cpp"
             className="hidden"
             onChange={(e) => handleFileChange("exePath", e)}
           />
@@ -215,7 +216,7 @@ export default function ProblemForm({
             className="w-full flex items-center justify-center gap-2"
           >
             <UploadCloud className="w-4 h-4" />
-            {form.exePath || "Choose Executable File"}
+            {form.exePath || "Choose Executable (.exe / .out / .cpp)"}
           </Button>
         </div>
 

@@ -1,0 +1,29 @@
+# Node & package files
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build outputs
+dist
+build
+coverage
+
+# Local envs and secrets
+.env
+.env.* 
+
+# Local runtime artifacts (we mount these as volumes)
+uploads
+test-bin
+logs
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Git
+.git
+.gitignore

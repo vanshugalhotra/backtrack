@@ -38,7 +38,9 @@ export class LoggerService {
 
     // General logger configuration
     this.logger = winston.createLogger({
-      level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+      level:
+        process.env.LOG_LEVEL ||
+        (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
       transports,
     });
   }

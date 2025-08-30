@@ -47,9 +47,10 @@ async function bootstrap() {
   });
 
   app.use(helmet()); // Use helmet for security
-
   app.enableCors({
-    origin: ['http://localhost:3000'], // replace with your frontend domain(s)
+    origin: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+      .split(',')
+      .map((o) => o.trim()),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
