@@ -7,8 +7,13 @@ import helmet from 'helmet';
 import { LoggerService } from './common/logger/logger.service';
 import { BadRequestError } from './common/errors/http-error';
 
+import { join } from 'path';
+import * as express from 'express';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // serve uploaded icons statically at /icons
+  app.use('/icons', express.static(join(process.cwd(), 'uploads', 'icons')));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -42,9 +47,10 @@ async function bootstrap() {
   });
 
   app.use(helmet()); // Use helmet for security
-
   app.enableCors({
-    origin: ['http://localhost:3000'], // replace with your frontend domain(s)
+    origin: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+      .split(',')
+      .map((o) => o.trim()),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

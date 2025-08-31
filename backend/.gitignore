@@ -40,6 +40,7 @@ lerna-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 .env.local
 .env.test
 
@@ -58,3 +59,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 
 /executables
+/uploads

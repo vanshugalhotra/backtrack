@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClearDbService } from './clear-db.service';
 import { ClearDbController } from './clear-db.controller';
-import { PrismaService } from '../prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -12,6 +11,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [ClearDbController],
-  providers: [ClearDbService, PrismaService],
+  providers: [ClearDbService],
 })
 export class ClearDbModule {}

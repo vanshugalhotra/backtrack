@@ -18,9 +18,9 @@ export type ExecutorResponse = {
 @Injectable()
 export class ExecutorService {
   private readonly allowedDirectories = [
-    './executables',
+    './uploads/executables',
     './test-bin',
-    'executables',
+    'uploads/executables',
     'test-bin',
   ];
   constructor(private readonly logger: LoggerService) {}

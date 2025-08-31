@@ -5,9 +5,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // This will be read from your .env file
+  url      = env("DATABASE_URL")       
+  directUrl = env("DIRECT_DATABASE_URL")
 }
-
 model Problem {
   id          Int        @id @default(autoincrement())
   name        String

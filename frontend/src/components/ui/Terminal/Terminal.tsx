@@ -34,7 +34,7 @@ const Terminal: React.FC = () => {
     }
 
     try {
-      const exePath = `./executables/${
+      const exePath = `./uploads/executables/${
         selectedProblem?.exePath || "dummy.exe"
       }`;
 
