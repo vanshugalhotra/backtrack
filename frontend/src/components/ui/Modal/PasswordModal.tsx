@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordModalProps {
   open: boolean;
@@ -23,6 +24,7 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
   onSubmit,
 }) => {
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = () => {
     if (password.trim()) {
@@ -43,14 +45,21 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
+        <div className="relative">
           <Input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-white/5 border border-white/20 text-white placeholder-white/40 h-12 px-4 text-base rounded-md focus-visible:ring-2 focus-visible:ring-cyan-600"
+            className="bg-white/5 border border-white/20 text-white placeholder-white/40 h-12 px-4 pr-12 text-base rounded-md focus-visible:ring-2 focus-visible:ring-cyan-600"
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-3 flex items-center text-white/60 hover:text-white cursor-pointer"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
         </div>
 
         <Button
