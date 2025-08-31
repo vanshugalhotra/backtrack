@@ -1,16 +1,18 @@
 import type { NextConfig } from "next";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3333";
+
 const nextConfig: NextConfig = {
   // Rewrites to proxy requests to the backend API
   async rewrites() {
     return [
       {
         source: "/api/:path*", // Match anything starting with /api
-        destination: "http://localhost:3333/api/:path*", // Redirect to backend API running on port 3333
+        destination: `${BACKEND_URL}/api/:path*`, // Redirect to backend API running on port 3333
       },
       {
         source: "/icons/:path*",
-        destination: "http://localhost:3333/icons/:path*", // proxy to backend for icons
+        destination: `${BACKEND_URL}/icons/:path*`, // proxy to backend for icons
       },
     ];
   },
