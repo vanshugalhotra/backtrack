@@ -6,13 +6,14 @@ import TestsForm from "@/components/ui/TestsForm";
 import { TestFormData } from "../../../../../types/test";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useRouter } from "next/navigation";
+import { TESTS_API } from "@/lib/apiConfig";
 
 export default function AddTestPage() {
   const router = useRouter();
 
   const handleAdd = async (formData: TestFormData) => {
     try {
-      const res = await fetchWithAuth("/api/v1/tests", {
+      const res = await fetchWithAuth(TESTS_API.list, {
         method: "POST",
         body: JSON.stringify(formData),
       });

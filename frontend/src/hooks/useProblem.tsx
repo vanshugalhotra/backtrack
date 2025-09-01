@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Problem } from "../../types/problem";
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { PROBLEMS_API } from "@/lib/apiConfig";
 
 const useProblem = (slug: string | undefined) => {
   const [problem, setProblem] = useState<Problem | null>(null);
@@ -16,7 +17,7 @@ const useProblem = (slug: string | undefined) => {
       setError(null);
 
       try {
-        const response = await fetchWithAuth(`/api/v1/problems/${slug}`);
+        const response = await fetchWithAuth(PROBLEMS_API.detail(slug));
 
         const data = await response.json();
         if (!response.ok || "statusCode" in data) {

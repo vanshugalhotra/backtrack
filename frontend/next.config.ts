@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3333";
+// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3333";
 
 const nextConfig: NextConfig = {
   // Rewrites to proxy requests to the backend API
+  /*
   async rewrites() {
     return [
       {
@@ -16,9 +17,25 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
+  */
   // Other Next.js configurations can go here
   reactStrictMode: true, // Just an example of an additional config option
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3333",
+        pathname: "/icons/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**", // allow any host in prod (safe for icons)
+        pathname: "/icons/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

@@ -5,6 +5,7 @@ import { LucideEdit, LucideTrash } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import Image from "next/image";
+import { ICONS_API } from "@/lib/apiConfig";
 
 type ProblemCardProps = {
   problem: {
@@ -36,7 +37,7 @@ export default function ProblemCard({ problem, onDelete }: ProblemCardProps) {
         </div>
         {problem.iconPath && (
           <Image
-            src={`/icons/${problem.iconPath}`}
+            src={ICONS_API.public(problem.iconPath)}
             alt={problem.name}
             width={48}
             height={48}
