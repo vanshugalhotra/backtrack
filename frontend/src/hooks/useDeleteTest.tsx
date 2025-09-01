@@ -1,9 +1,10 @@
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { TESTS_API } from "@/lib/apiConfig";
 
 const useDeleteTest = () => {
   const deleteTest = async (slug: string) => {
     try {
-      const res = await fetchWithAuth(`/api/v1/tests/${slug}`, {
+      const res = await fetchWithAuth(TESTS_API.detail(slug), {
         method: "DELETE",
       });
 

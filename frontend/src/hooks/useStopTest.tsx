@@ -3,6 +3,7 @@
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useCallback } from "react";
+import { TESTS_API } from "@/lib/apiConfig";
 
 const useStopTest = () => {
   const { setLoading, setError } = useGlobalUI();
@@ -12,7 +13,7 @@ const useStopTest = () => {
     setError(null);
 
     try {
-      const url = `/api/v1/tests/${slug}/stop?password=${encodeURIComponent(password)}`;
+      const url = `${TESTS_API.stop(slug)}?password=${encodeURIComponent(password)}`;
 
       const response = await fetchWithAuth(url, {
         method: "POST",

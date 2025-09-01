@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { TESTS_API } from "@/lib/apiConfig";
 
 type Test = {
   id: number;
@@ -22,7 +23,7 @@ const useTests = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchWithAuth("/api/v1/tests");
+        const response = await fetchWithAuth(TESTS_API.list);
 
         if (!response.ok) {
           const error = await response.json();
