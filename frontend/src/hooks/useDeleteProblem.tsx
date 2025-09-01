@@ -1,5 +1,6 @@
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useGlobalUI } from "../../context/GlobalUIContext"; 
+import { PROBLEMS_API } from "@/lib/apiConfig";
 
 const useDeleteProblem = () => {
   const { setLoading, setError } = useGlobalUI();
@@ -9,7 +10,7 @@ const useDeleteProblem = () => {
     setError(null); // Clear previous errors
 
     try {
-      const response = await fetchWithAuth(`/api/v1/problems/${slug}`, {
+      const response = await fetchWithAuth(PROBLEMS_API.detail(slug), {
         method: "DELETE",
       });
 

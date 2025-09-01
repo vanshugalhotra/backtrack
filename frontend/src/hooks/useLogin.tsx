@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGlobalUI } from "../../context/GlobalUIContext";
+import { AUTH_API } from "@/lib/apiConfig";
 
 const useLogin = () => {
   const [token, setToken] = useState<string | null>(null);
@@ -10,7 +11,7 @@ const useLogin = () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/v1/auth/login", {
+      const response = await fetch(AUTH_API.login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

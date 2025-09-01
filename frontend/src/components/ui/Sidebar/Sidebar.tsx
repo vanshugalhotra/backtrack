@@ -5,6 +5,7 @@ import ChallengeList from "./ChallengeList";
 import { Menu, X } from "lucide-react";
 import { Problem } from "../../../../types/problem";
 import { useProblemContext } from "../../../../context/ProblemContext";
+import { ICONS_API } from "@/lib/apiConfig";
 
 type SidebarProps = { problems: Problem[] };
 
@@ -40,9 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ problems }) => {
             challenges={problems.map((problem: Problem) => ({
               name: problem.name,
               slug: problem.slug,
-              icon: `/icons/${
-                problem.iconPath ? problem.iconPath : "blackhole.svg"
-              }`,
+              icon: ICONS_API.public(problem.iconPath || "blackhole.svg"),
               difficulty: problem.difficulty,
             }))}
             selectedSlug={selectedSlug}

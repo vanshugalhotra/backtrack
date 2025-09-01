@@ -1,6 +1,7 @@
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { ExecutorRequest } from "../../types/executorRequest";
 import { ExecutorResponse } from "../../types/executorResponse";
+import { EXECUTE_API } from "@/lib/apiConfig";
 
 export const useExecute = () => {
   const { setLoading, setError } = useGlobalUI();
@@ -12,7 +13,7 @@ export const useExecute = () => {
     const requestData: ExecutorRequest = { exePath, input };
 
     try {
-      const res = await fetch("/api/v1/execute", {
+      const res = await fetch(EXECUTE_API.run, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

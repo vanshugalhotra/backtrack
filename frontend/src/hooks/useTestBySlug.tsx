@@ -5,6 +5,7 @@ import { TestDetail } from "../../types/test";
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useSearchParams, useParams } from "next/navigation";
+import { TESTS_API } from "@/lib/apiConfig";
 
 const useTestBySlug = () => {
   const [test, setTest] = useState<TestDetail | null>(null);
@@ -25,8 +26,8 @@ const useTestBySlug = () => {
 
       try {
         const url = password
-          ? `/api/v1/tests/${slug}?password=${encodeURIComponent(password)}`
-          : `/api/v1/tests/${slug}`;
+          ? `${TESTS_API.detail(slug)}?password=${encodeURIComponent(password)}`
+          : TESTS_API.detail(slug);
 
         const response = await fetchWithAuth(url);
 

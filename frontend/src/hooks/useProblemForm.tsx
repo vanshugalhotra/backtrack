@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGlobalUI } from "../../context/GlobalUIContext";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { PROBLEMS_API, FILE_UPLOAD_API } from "@/lib/apiConfig";
 
 export const useProblemForm = () => {
   const { setLoading, setError } = useGlobalUI();
@@ -12,10 +13,16 @@ export const useProblemForm = () => {
     formData.append("file", file);
 
     try {
-      let endpoint = `/api/v1/file-upload/${fileType}`;
+      let endpoint: string;
+
       if (fileType === "exe" && file.name.endsWith(".cpp")) {
-        endpoint = `/api/v1/file-upload/cpp`;
+        endpoint = FILE_UPLOAD_API.cpp;
+      } else if (fileType === "exe") {
+        endpoint = FILE_UPLOAD_API.exe;
+      } else {
+        endpoint = FILE_UPLOAD_API.icon;
       }
+
       const res = await fetch(endpoint, {
         method: "POST",
         body: formData,
@@ -54,7 +61,7 @@ export const useProblemForm = () => {
         ...formData,
       };
 
-      const res = await fetchWithAuth("/api/v1/problems", {
+      const res = await fetchWithAuth(PROBLEMS_API.list, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
