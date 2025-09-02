@@ -35,12 +35,12 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-xl bg-gradient-to-br from-[#0b0f26] to-[#131a3a] border border-cyan-500/20 text-white shadow-2xl backdrop-blur-lg animate-fade-in-up rounded-2xl px-8 py-6 space-y-6">
+      <DialogContent className="w-full max-w-md bg-[#0b0f26] border border-white/10 shadow-xl backdrop-blur-md animate-fade-in-up rounded-xl px-6 py-6 space-y-6 text-white">
         <DialogHeader>
-          <DialogTitle className="text-cyan-400 text-2xl font-semibold tracking-wide text-center">
+          <DialogTitle className="text-white text-2xl font-semibold tracking-tight text-center">
             Enter Test Password
           </DialogTitle>
-          <DialogDescription className="text-sm text-white/60 text-center">
+          <DialogDescription className="text-sm text-white/50 text-center">
             This test is protected. Please enter the password to access it.
           </DialogDescription>
         </DialogHeader>
@@ -51,12 +51,12 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-white/5 border border-white/20 text-white placeholder-white/40 h-12 px-4 pr-12 text-base rounded-md focus-visible:ring-2 focus-visible:ring-cyan-600"
+            className="bg-white/5 border border-white/20 text-white placeholder-white/40 h-12 px-4 pr-12 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 transition"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-3 flex items-center text-white/60 hover:text-white cursor-pointer"
+            className="absolute inset-y-0 right-3 flex items-center text-white/40 hover:text-white transition-colors"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
@@ -64,7 +64,9 @@ const PasswordModal: React.FC<PasswordModalProps> = ({
 
         <Button
           onClick={handleSubmit}
-          className="w-full h-11 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-md transition-colors"
+          className="w-full h-11 rounded-lg text-white text-sm font-medium
+                     bg-white/10 hover:bg-white hover:text-black border border-white/20
+                     shadow-none transition-all duration-200 active:scale-95 cursor-pointer"
         >
           Submit
         </Button>

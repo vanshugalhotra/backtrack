@@ -21,43 +21,32 @@ const TestCard: React.FC<TestCardProps> = ({
   return (
     <Card
       onClick={onClick}
-      className="group relative w-full max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#0b0f26] to-[#0e122d] backdrop-blur-lg shadow-lg hover:shadow-cyan-500/20 transition duration-300 cursor-pointer"
+      className="group relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#0a0c14] shadow-sm transition-transform duration-300 hover:-translate-y-1 cursor-pointer"
     >
       {/* Banner */}
-      <div className="relative h-48 w-full">
-        <Image
-          src={image}
-          alt="Test Banner"
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        <div className="absolute top-3 right-3 bg-black/50 rounded-full p-1 backdrop-blur-sm">
-          <Lock size={18} className="text-cyan-300" />
+      <div className="relative h-44 w-full rounded-t-2xl overflow-hidden">
+        <Image src={image} alt="Test Banner" fill className="object-cover" />
+        <div className="absolute top-3 right-3 bg-black/60 rounded-md p-1">
+          <Lock size={18} className="text-indigo-400" />
         </div>
       </div>
 
       {/* Content */}
-      <CardContent className="px-6 py-5 text-white space-y-4">
-        <h3 className="text-xl font-semibold tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-          {name}
-        </h3>
+      <CardContent className="px-6 py-6 flex flex-col space-y-3">
+        <h3 className="text-xl font-semibold text-white">{name}</h3>
+        <p className="text-gray-300 text-sm line-clamp-3">{description}</p>
 
-        <p className="text-sm text-white/70 leading-relaxed line-clamp-3">
-          {description}
-        </p>
-
-        <div className="pt-2">
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-            className="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-medium rounded-md transition-colors duration-200 shadow"
-            size="sm"
-          >
-            Enter Test
-          </Button>
-        </div>
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick();
+          }}
+          className="mt-2 px-5 py-2 border border-white/20 text-white text-sm font-medium rounded-md 
+             bg-transparent hover:bg-white/90 hover:text-black hover:border-white transition-colors 
+             shadow-none active:scale-95 cursor-pointer"
+        >
+          Enter Test
+        </Button>
       </CardContent>
     </Card>
   );
