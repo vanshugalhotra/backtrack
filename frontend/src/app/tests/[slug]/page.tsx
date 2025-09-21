@@ -18,7 +18,7 @@ export default function TestPage() {
   return (
     <RequireAuth>
       {test.hasStarted ? (
-        <main className="min-h-screen w-full bg-cover bg-center flex items-center justify-center p-10">
+        <main className="min-h-screen w-full bg-cover bg-center flex items-center justify-center px-10 pt-10">
           <div className="flex w-full max-w-[1300px] min-h-[600px] rounded-xl bg-[#0b0f26]/30 border border-white/10 backdrop-blur-2xl shadow-2xl overflow-hidden">
             {/* Sidebar with test-specific problems */}
             <Sidebar problems={test.problems} />
