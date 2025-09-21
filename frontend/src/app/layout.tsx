@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "BackTrack",
   description: "InfoTrek 25",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({

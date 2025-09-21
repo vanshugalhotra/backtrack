@@ -115,7 +115,7 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
-    background-image: url("/bg.png");
+    background-image: url("/cosmos.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -150,7 +150,7 @@
   }
 
   .loading-svg {
-    animation: 6s infinite alternate animate-stroke;
+    animation: 3s infinite alternate animate-stroke;
   }
   @keyframes animate-stroke {
     0% {

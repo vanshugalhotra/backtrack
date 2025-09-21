@@ -1,17 +1,23 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import useTests from "@/hooks/useTests";
 import TestCard from "@/components/ui/TestCard";
 import RequireAuth from "@/components/auth/RequireAuth";
 import PasswordModal from "@/components/ui/Modal/PasswordModal";
-import { useStarfield } from "@/hooks/useStarField";
 import { toast } from "sonner";
 import LoaderGate from "@/components/chors/LoaderGate";
 
+import { Orbitron } from "next/font/google";
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-orbitron",
+});
+
 export default function HomePage() {
   const { tests } = useTests();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [selectedTest, setSelectedTest] = useState<null | {
     slug: string;
@@ -19,32 +25,51 @@ export default function HomePage() {
   }>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useStarfield(canvasRef);
-
   return (
     <RequireAuth>
       <LoaderGate>
-        <main className="relative min-h-screen w-full flex flex-col items-center justify-start px-6 py-12 text-white overflow-hidden">
-          <canvas
-            ref={canvasRef}
-            className="absolute inset-0 z-0 w-full h-full"
-          />
+        <main className="relative min-h-screen w-full flex flex-col items-center justify-start px-6 pt-10 text-white overflow-hidden">
+          {/* Video Background */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+          >
+            <source src="/cosmos.mp4" type="video/mp4" />
+          </video>
 
           {/* Heading Section */}
           <div
-            className="relative z-10 text-center mb-12 space-y-2"
+            className="relative z-10 text-center mb-12 space-y-3"
             data-testid="homepage-heading"
           >
-            <p className="text-base uppercase tracking-widest text-cyan-400 font-semibold">
+            {/* Tagline */}
+            <p
+              className={`${orbitron.className} text-sm sm:text-base uppercase tracking-[0.35em] text-indigo-300/90 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]`}
+            >
               Presented by ACM NIT Trichy
             </p>
-            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow">
-              INFOTREK<span className="text-cyan-400">&apos;25</span>
+
+            {/* Main Title */}
+            <h1
+              className={`${orbitron.className} text-5xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]`}
+            >
+              INFOTREK
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-cyan-400 to-sky-300 bg-[length:200%_auto]">
+                &apos;25
+              </span>
             </h1>
-            <p className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-white tracking-wide">
+
+            {/* Subtitle */}
+            <p
+              className={`${orbitron.className} text-3xl sm:text-4xl font-semibold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#e0e5ff] via-[#b0b5ff] to-[#a0a5ff] drop-shadow-[0_1px_6px_rgba(50,50,150,0.3)] group-hover:from-[#f0f0ff] group-hover:via-[#c5caff] group-hover:to-[#b5baff] group-hover:scale-[1.02] transition-all duration-300 ease-in-out`}
+            >
               BackTrack
             </p>
           </div>
+
           {/* Test Grid Section */}
           <section className="relative z-10 w-full max-w-7xl px-4">
             {tests && tests.length > 0 ? (
@@ -69,7 +94,10 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-32 text-center space-y-3" data-testid="no-tests-message">
+              <div
+                className="flex flex-col items-center justify-center py-32 text-center space-y-3"
+                data-testid="no-tests-message"
+              >
                 <h2 className="text-2xl sm:text-3xl font-semibold text-cyan-300 drop-shadow-lg">
                   No Tests Available
                 </h2>
