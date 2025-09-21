@@ -1,3 +1,11 @@
+import { Orbitron} from "next/font/google";
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  variable: "--font-orbitron",
+});
+
 const SvgLoading = () => {
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-transparent">
@@ -7,7 +15,7 @@ const SvgLoading = () => {
           y="50%"
           dy=".32em"
           textAnchor={"middle"}
-          className="text-4xl font-extrabold tracking-tight stroke-white loading-svg sm:text-xl"
+          className={`${orbitron.className} text-6xl font-extrabold tracking-tight stroke-white loading-svg sm:text-xl`}
           strokeWidth=".2"
         >
           Infotrek&apos;25
