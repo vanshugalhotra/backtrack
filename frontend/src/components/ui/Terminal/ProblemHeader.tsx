@@ -12,7 +12,7 @@ const ProblemHeader: React.FC<Props> = ({ problem }) => {
     <div className="text-center mb-8 space-y-4">
       {/* Event Header */}
       <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-indigo-400 to-purple-500 text-lg sm:text-xl font-mono font-bold tracking-[0.3em] uppercase">
-        INFOTREK’25 – BACKTRACK
+        ACUMEN’25 – BACKTRACK
       </h1>
 
       {/* Problem Title */}

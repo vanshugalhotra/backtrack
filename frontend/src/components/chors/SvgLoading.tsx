@@ -18,7 +18,7 @@ const SvgLoading = () => {
           className={`${orbitron.className} text-6xl font-extrabold tracking-tight stroke-white loading-svg sm:text-xl`}
           strokeWidth=".2"
         >
-          Infotrek&apos;25
+          ACUMEN&apos;25
         </text>
         <text
           x="50%"

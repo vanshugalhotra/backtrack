@@ -65,7 +65,7 @@ export default function HomePage() {
             <h1
               className={`${orbitron.className} text-5xl sm:text-6xl font-extrabold tracking-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]`}
             >
-              INFOTREK
+              ACUMEN
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-cyan-400 to-sky-300 bg-[length:200%_auto]">
                 &apos;25
               </span>
