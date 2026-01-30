@@ -25,5 +25,3 @@ logs/
 # Playwright artifacts
 frontend/playwright-report/
 frontend/test-results/
-
-migrations
