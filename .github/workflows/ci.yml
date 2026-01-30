@@ -103,7 +103,7 @@ jobs:
       - name: Apply Prisma schema (migrate or push)
         run: |
           cd backend
-          npx prisma migrate deploy --preview-feature || npx prisma db push
+          npx prisma db push --force-reset
 
       - name: Compile C++ test binaries
         run: |
