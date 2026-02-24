@@ -15,7 +15,7 @@ const Terminal: React.FC = () => {
   const { selectedProblem } = useProblemContext();
 
   const { executeCommand } = useExecute();
-  const prompt = `acumen$`;
+  const prompt = `version$`;
 
   const handleExecute = async () => {
     if (input === "$clear") {

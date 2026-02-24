@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ problems }) => {
       <aside className="hidden md:block w-[300px] bg-[#0b0f26]/50 backdrop-blur-xl border-r border-white/10 px-6 py-10 text-white shadow-xl">
         <div className="mb-12 text-center">
           <h1 className="text-lg tracking-[0.2em] text-cyan-400 font-bold">
-            ACUMEN
+            VERSION
           </h1>
           <h2 className="text-3xl font-extrabold mt-3 leading-tight text-white">
             BackTrack
@@ -63,7 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({ problems }) => {
       >
         <div className="mb-8 text-center">
           <h1 className="text-lg tracking-[0.2em] text-cyan-400 font-bold">
-            ACUMEN
+            VERSION
           </h1>
           <h2 className="text-2xl font-extrabold mt-2">BackTrack</h2>
         </div>

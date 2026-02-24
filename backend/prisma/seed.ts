@@ -19,7 +19,7 @@ const testData = [
     slug: 'backtrack-void',
     description:
       'A steady stream of problems that push your thinking to the limit.',
-    password: 'ustaadji@1228',
+    password: 'Version26@UST',
     hasStarted: false,
   },
 ];

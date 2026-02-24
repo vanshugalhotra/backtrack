@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "BackTrack",
-  description: "ACUMEN 25",
+  description: "VERSION'26",
   icons: {
     icon: '/favicon.ico',
   },

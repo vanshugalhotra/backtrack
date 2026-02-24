@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
             <div className="mt-auto pt-16 text-sm text-white/30 text-center border-t border-white/10">
               <p className="mt-4">
-                &copy; {new Date().getFullYear()} ACUMEN. All rights reserved.
+                &copy; {new Date().getFullYear()} VERSION&apos;26. All rights reserved.
               </p>
             </div>
           </aside>
