@@ -59,7 +59,7 @@ export default function HomePage() {
             <p
               className={`${orbitron.className} text-sm sm:text-base uppercase tracking-[0.35em] text-indigo-300/90 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]`}
             >
-              Presented by ACM NIT Trichy
+              Presented by VERSION NIT Trichy
             </p>
 
             <h1
