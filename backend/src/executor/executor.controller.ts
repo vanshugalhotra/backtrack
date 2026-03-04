@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Version } from '@nestjs/common';
+import { Controller, Post, Body, Version, UseGuards } from '@nestjs/common';
 import { ExecutorService } from './executor.service';
 import { ExecuteDto } from './dto/execute.dto';
+import { JwtAuthGuard } from 'src/auth/gaurd/jwt-auth.gaurd';
 
 @Controller('execute') // Maps to /api/v1/execute
+@UseGuards(JwtAuthGuard)
 export class ExecutorController {
   constructor(private readonly executorService: ExecutorService) {}
 
