@@ -15,6 +15,7 @@ export type ApiResponse = {
 describe('Auth API (e2e)', () => {
   let app: INestApplication;
   let server: Parameters<typeof request>[0];
+  const adminSecret = process.env.ADMIN_REGISTER_SECRET || 'test-secret';
 
   const testUser = {
     email: 'testuser@example.com',
@@ -52,9 +53,11 @@ describe('Auth API (e2e)', () => {
   });
 
   let token: string;
+
   it('/api/v1/auth/register (POST) - should register a new user', async () => {
     const res = await request(server)
       .post('/api/v1/auth/register')
+      .set('x-admin-secret', adminSecret)
       .send(testUser);
 
     const body = res.body as ApiResponse;
@@ -66,6 +69,7 @@ describe('Auth API (e2e)', () => {
   it('/api/v1/auth/register (POST) - should fail if email already exists', async () => {
     const res = await request(server)
       .post('/api/v1/auth/register')
+      .set('x-admin-secret', adminSecret)
       .send(testUser);
 
     const body = res.body as HttpError;
@@ -74,14 +78,38 @@ describe('Auth API (e2e)', () => {
   });
 
   it('/api/v1/auth/register (POST) - should fail on invalid email format', async () => {
-    const res = await request(server).post('/api/v1/auth/register').send({
-      email: 'invalid-email',
-      password: 'Password123',
-    });
+    const res = await request(server)
+      .post('/api/v1/auth/register')
+      .set('x-admin-secret', adminSecret)
+      .send({
+        email: 'invalid-email',
+        password: 'Password123',
+      });
 
     const body = res.body as HttpError;
     expect(res.status).toBe(400);
     expect(body.message).toContain('email must be an email');
+  });
+
+  it('/api/v1/auth/register (POST) - should fail with wrong admin secret', async () => {
+    const res = await request(server)
+      .post('/api/v1/auth/register')
+      .set('x-admin-secret', 'wrong-secret')
+      .send(testUser);
+
+    const body = res.body as HttpError;
+    expect(res.status).toBe(403);
+    expect(body.message).toContain('Registration disabled');
+  });
+
+  it('/api/v1/auth/register (POST) - should fail without admin secret', async () => {
+    const res = await request(server)
+      .post('/api/v1/auth/register')
+      .send(testUser);
+
+    const body = res.body as HttpError;
+    expect(res.status).toBe(403);
+    expect(body.message).toContain('Registration disabled');
   });
 
   it('/api/v1/auth/login (POST) - should login an existing user', async () => {

@@ -2,6 +2,7 @@ import { useGlobalUI } from "../../context/GlobalUIContext";
 import { ExecutorRequest } from "../../types/executorRequest";
 import { ExecutorResponse } from "../../types/executorResponse";
 import { EXECUTE_API } from "@/lib/apiConfig";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export const useExecute = () => {
   const { setLoading, setError } = useGlobalUI();
@@ -13,24 +14,25 @@ export const useExecute = () => {
     const requestData: ExecutorRequest = { exePath, input };
 
     try {
-      const res = await fetch(EXECUTE_API.run, {
+      const res = await fetchWithAuth(EXECUTE_API.run, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(requestData), // Pass the request data
       });
 
       const data: ExecutorResponse = await res.json(); // Define the response type
 
       if (!res.ok) {
+        // Handle 401 Unauthorized specially if needed
+        if (res.status === 401) {
+          throw new Error("Please log in to execute commands");
+        }
         throw new Error(data?.message || "Execution failed");
       }
 
       return data;
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "An unknown error occurred"
+        err instanceof Error ? err.message : "An unknown error occurred",
       );
       throw err; // Rethrow the error so it can be handled by the caller
     } finally {

@@ -16,9 +16,18 @@ function getExecutable(name: string) {
   return `${binDir}/${name}${isWindows ? '.exe' : '.out'}`;
 }
 
+type ApiResponse = { access_token: string };
+
 describe('Execute API (e2e)', () => {
   let app: INestApplication;
   let server: Parameters<typeof request>[0];
+  const adminSecret = process.env.ADMIN_REGISTER_SECRET || 'test-secret';
+
+  const testUser = {
+    email: 'testuser_exec@example.com',
+    password: 'TestPass123',
+    role: 'ADMIN',
+  };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -44,9 +53,23 @@ describe('Execute API (e2e)', () => {
     server = app.getHttpServer() as unknown as Parameters<typeof request>[0];
   });
 
+  let token: string;
+  it('/api/v1/auth/register (POST) - register admin user', async () => {
+    const res = await request(server)
+      .post('/api/v1/auth/register')
+      .set('x-admin-secret', adminSecret)
+      .send(testUser);
+
+    const body = res.body as ApiResponse;
+    expect(res.status).toBe(201);
+    expect(body.access_token).toBeDefined();
+    token = body.access_token;
+  });
+
   it('/api/v1/execute (POST) - should return output on valid exe path', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('echo'),
         input: 'Hello World',
@@ -63,6 +86,7 @@ describe('Execute API (e2e)', () => {
   it('/api/v1/execute (POST) - should return 500 for non-existent executable path', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('nonexistent'), // Non-existent executable
         input: 'Hello World',
@@ -77,6 +101,7 @@ describe('Execute API (e2e)', () => {
   it('/api/v1/execute (POST) - should return bad request', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('echo'), // Ensure this executable exists
         // No input provided
@@ -86,10 +111,13 @@ describe('Execute API (e2e)', () => {
   });
 
   it('/api/v1/execute (POST) - should return 400 for missing exePath', async () => {
-    const res = await request(server).post('/api/v1/execute').send({
-      // exePath is missing
-      input: 'Some input',
-    });
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        // exePath is missing
+        input: 'Some input',
+      });
 
     expect(res.status).toBe(400);
   });
@@ -97,6 +125,7 @@ describe('Execute API (e2e)', () => {
   it('/api/v1/execute (POST) - should return 400 for invalid input type', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('echo'), // Valid exePath
         input: { key: 'value' }, // Invalid input type (object instead of string)
@@ -110,6 +139,7 @@ describe('Execute API (e2e)', () => {
   it('/api/v1/execute (POST) - should return empty stdout, empty stderr, and exitCode 0 for silent executable', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('silent'), // Path to a valid executable that does not produce output
         input: 'Hello World',
@@ -122,6 +152,7 @@ describe('Execute API (e2e)', () => {
   it('/api/v1/execute (POST) - should return empty output', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('echo'), // Path to a valid executable that accepts an empty input string
         input: '', // Empty input string
@@ -132,9 +163,10 @@ describe('Execute API (e2e)', () => {
     expect(body.output).toBe('');
   });
 
-  it('/api/v1/execute (POST) - developer issue should return 400', async () => {
+  it('/api/v1/execute (POST) - should return 400 for invalid input type (number)', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('echo'),
         input: 123,
@@ -146,6 +178,7 @@ describe('Execute API (e2e)', () => {
   it('/api/v1/execute (POST) - multiple inputs', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('sum'),
         input: '1 5',
@@ -155,9 +188,22 @@ describe('Execute API (e2e)', () => {
     expect(res.status).toBe(201);
     expect(body.output).toBe('6');
   });
+
+  it('/api/v1/execute (POST) - should fail without authorization token', async () => {
+    const res = await request(server)
+      .post('/api/v1/execute')
+      .send({
+        exePath: getExecutable('echo'),
+        input: 'Hello World',
+      });
+
+    expect(res.status).toBe(403); // Unauthorized
+  });
+
   it('/api/v1/execute (POST) - nonzero exitcode', async () => {
     const res = await request(server)
       .post('/api/v1/execute')
+      .set('Authorization', `Bearer ${token}`)
       .send({
         exePath: getExecutable('nonzero'),
         input: '1 0',
@@ -167,6 +213,13 @@ describe('Execute API (e2e)', () => {
     expect(res.status).toBe(201);
     expect(body.output).toBe('ERROR');
     expect(body.exitCode).not.toBe(0);
+  });
+
+  it('/api/v1/clear-db/users (DELETE) - should truncate the users table', async () => {
+    const res = await request(server)
+      .delete('/api/v1/clear-db/users')
+      .set('Authorization', `Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
   });
 
   afterAll(async () => {

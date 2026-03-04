@@ -16,6 +16,7 @@ type ApiResponse = { access_token: string };
 describe('Tests API (e2e)', () => {
   let app: INestApplication;
   let server: Parameters<typeof request>[0];
+  const adminSecret = process.env.ADMIN_REGISTER_SECRET || 'test-secret';
 
   const testUser = {
     email: 'testuser_t@example.com',
@@ -51,6 +52,7 @@ describe('Tests API (e2e)', () => {
   it('/api/v1/auth/register (POST) - register admin user', async () => {
     const res = await request(server)
       .post('/api/v1/auth/register')
+      .set('x-admin-secret', adminSecret)
       .send(testUser);
 
     const body = res.body as ApiResponse;
