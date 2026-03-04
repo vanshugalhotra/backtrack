@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Version } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Version,
+  Headers,
+  ForbiddenException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -9,7 +16,13 @@ export class AuthController {
 
   @Post('register')
   @Version('1')
-  register(@Body() dto: RegisterDto) {
+  register(
+    @Body() dto: RegisterDto,
+    @Headers('x-admin-secret') secret: string,
+  ) {
+    if (secret !== process.env.ADMIN_REGISTER_SECRET) {
+      throw new ForbiddenException('Registration disabled');
+    }
     return this.authService.register(dto);
   }
 
