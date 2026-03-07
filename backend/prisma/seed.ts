@@ -111,7 +111,7 @@ const problemData = [
 // --- 3. DEFINE RELATIONSHIP DATA ---
 
 const testProblemRelations = [
-  { testId: 1, problemId: 9 },
+  { testId: 1, problemId: 8 },
   { testId: 2, problemId: 1 },
   { testId: 2, problemId: 2 },
   { testId: 2, problemId: 3 },
