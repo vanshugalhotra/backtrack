@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 // --- 1. DEFINE DATA FOR TEST TABLE ---
 const testData = [
   {
-    id: 5,
+    id: 1,
     name: 'Sample Test',
     slug: 'sample-test',
     description:
@@ -14,7 +14,7 @@ const testData = [
     hasStarted: false,
   },
   {
-    id: 6,
+    id: 2,
     name: 'BackTrack into the Void',
     slug: 'backtrack-void',
     description:
@@ -27,34 +27,54 @@ const testData = [
 // --- 2. DEFINE DATA FOR PROBLEMS TABLE ---
 const problemData = [
   {
+    id: 1,
+    name: 'Quantum Star',
+    slug: 'quantum-star',
+    difficulty: Difficulty.EASY,
+    points: 20,
+    exePath: 'evenodd.out',
+    description: '1 <= n <= 1e9',
+    iconPath: 'spiral.png',
+  },
+  {
+    id: 2,
+    name: 'Accretion',
+    slug: 'accretion',
+    difficulty: Difficulty.EASY,
+    points: 20,
+    exePath: 'sum_of_digits.out',
+    description: '1 <= n <= 1e9',
+    iconPath: 'neutron.png',
+  },
+  {
     id: 3,
+    name: 'Stellar Pulses',
+    slug: 'stellar-pulses',
+    difficulty: Difficulty.EASY,
+    points: 20,
+    exePath: 'set_bits.out',
+    description: '1 <= n <= 1e9 | Hint: Think in Binary!',
+    iconPath: 'cosmic-diagonals.png',
+  },
+  {
+    id: 4,
     name: 'Cosmic Echo',
     slug: 'cosmic-echo',
-    difficulty: Difficulty.EASY, // Use the enum
+    difficulty: Difficulty.EASY,
     points: 20,
     exePath: 'look_and_say.out',
     description: '1 <= n <= 1e9',
     iconPath: 'cosmic_echo.svg',
   },
   {
-    id: 4,
+    id: 5,
     name: 'Photon Drift',
     slug: 'photon-drift',
     difficulty: Difficulty.MEDIUM,
     points: 30,
     exePath: 'ascii_encoder.out',
     description: 'string of length 1 to 1000 | Hint: Play with ASCII',
-    iconPath: 'photo_drift.svg',
-  },
-  {
-    id: 5,
-    name: 'Cosmic Diagonals',
-    slug: 'cosmic-diagonals',
-    difficulty: Difficulty.MEDIUM,
-    points: 30,
-    exePath: 'pattern.out',
-    description: '1 <= n <= 100',
-    iconPath: 'cosmic-diagonals.png',
+    iconPath: 'photon_drift.svg',
   },
   {
     id: 6,
@@ -68,47 +88,37 @@ const problemData = [
   },
   {
     id: 7,
-    name: "Halley's Orbit",
+    name: 'Halley’s Orbit',
     slug: 'halleys-orbit',
-    difficulty: Difficulty.MEDIUM,
-    points: 30,
+    difficulty: Difficulty.HARD,
+    points: 50,
     exePath: 'rotate_number.out',
-    description: '1 <= n <= 1e9 | Hint: Think in Binary !',
+    description: '1 <= n <= 1e9 | Hint: Think in Binary!',
     iconPath: 'galaxy.png',
   },
   {
     id: 8,
-    name: 'Quasar Spiral',
-    slug: 'quasar-spiral',
-    difficulty: Difficulty.HARD,
-    points: 50,
-    exePath: 'fib_mask.out',
-    description: '1 <= n <= 1e5',
-    iconPath: 'spiral.png',
-  },
-  {
-    id: 9,
-    name: 'Quantum Star',
-    slug: 'quantum-star',
+    name: 'BlackHole',
+    slug: 'black-hole',
     difficulty: Difficulty.EASY,
-    points: 20,
+    points: 0,
     exePath: 'sample.out',
-    description: '1 <= n <= 1e9',
-    iconPath: 'neutron.png',
+    description: '1 <= n <= 1e5',
+    iconPath: 'blackhole.png',
   },
 ];
 
 // --- 3. DEFINE RELATIONSHIP DATA ---
-// Column A = Test ID, Column B = Problem ID (from image_669968.png)
-// We only need to know which problems belong to which tests.
+
 const testProblemRelations = [
-  { testId: 6, problemId: 3 },
-  { testId: 6, problemId: 4 },
-  { testId: 6, problemId: 5 },
-  { testId: 6, problemId: 6 },
-  { testId: 6, problemId: 7 },
-  { testId: 6, problemId: 8 },
-  { testId: 5, problemId: 9 },
+  { testId: 1, problemId: 9 },
+  { testId: 2, problemId: 1 },
+  { testId: 2, problemId: 2 },
+  { testId: 2, problemId: 3 },
+  { testId: 2, problemId: 4 },
+  { testId: 2, problemId: 5 },
+  { testId: 2, problemId: 6 },
+  { testId: 2, problemId: 7 },
 ];
 
 async function main() {
